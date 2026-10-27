@@ -9,13 +9,13 @@ window.CONFIG = {
 
   /* --- 배포 주소 ------------------------------------------------
      카카오톡 미리보기 이미지와 링크 복사에 쓰입니다. 끝에 / 를 붙이세요. */
-  siteUrl: 'https://example.github.io/wedding/',   // TODO: 실제 배포 주소
+  siteUrl: 'https://sehoonbae.github.io/wedding/',
 
   /* --- 미리보기 문구 (index.html의 OG 태그와 같게 맞추세요) --- */
   meta: {
     title: '세훈 ♥ 초희 결혼합니다',
     description: '2027년 2월 20일 토요일 오후 12시 20분, 레노스블랑쉬 2층',
-    ogImage: 'assets/main.jpg'   // 1200×630, 300KB 이하 JPG
+    ogImage: 'assets/og.jpg'   // 1200×630, 300KB 이하 JPG
   },
 
   /* --- 신랑 · 신부 ---------------------------------------------
@@ -63,7 +63,7 @@ window.CONFIG = {
      네이버 클라우드 플랫폼 > Maps > Dynamic Map 에서 받은 Client ID.
      비어 있거나 도메인 등록이 안 되어 있으면 주소 안내 카드로 바뀝니다.
      발급과 도메인 등록 절차는 DEPLOY.md 를 보세요. */
-  naverMap: { clientId: '7l0vdcx6qf', zoom: 17 },        // TODO: clientId
+  naverMap: { clientId: '7l0vdcx6qf', zoom: 17 },
 
   /* --- 대중교통 · 주차 ----------------------------------------- */
   transit: [
