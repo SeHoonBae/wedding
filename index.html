@@ -1,0 +1,173 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<meta name="format-detection" content="telephone=no">
+<meta name="theme-color" content="#E4E9E4" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0D1214" media="(prefers-color-scheme: dark)">
+
+<!-- ==========================================================
+     카카오톡 미리보기(Open Graph)
+     카카오 크롤러는 자바스크립트를 실행하지 않습니다.
+     그래서 이 블록만은 config.js가 아니라 여기를 직접 고쳐야 합니다.
+     배포 주소가 정해지면 아래 https://... 네 군데를 바꾸고,
+     config.js의 siteUrl도 같은 값으로 맞추세요. (DEPLOY.md 5단계)
+     ========================================================== -->
+<title>민준 ♥ 서연 결혼합니다</title>
+<meta property="og:type" content="website">
+<meta property="og:title" content="민준 ♥ 서연 결혼합니다">
+<meta property="og:description" content="2027년 2월 20일 토요일 오후 12시 20분, 레노스블랑쉬 2층">
+<meta property="og:image" content="https://example.github.io/wedding/assets/og.jpg">
+<meta property="og:url" content="https://example.github.io/wedding/">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:locale" content="ko_KR">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="description" content="2027년 2월 20일 토요일 오후 12시 20분, 레노스블랑쉬 2층">
+<!-- ========================================================== -->
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Gowun+Dodum&family=Hahmlet:wght@500;700&display=swap">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<main class="page">
+
+  <!-- 1. 커버 -->
+  <header class="cover" id="cover">
+    <div class="cover-photo" id="coverPhoto"></div>
+    <div class="cover-body">
+      <p class="stampline" id="stampline"></p>
+      <h1 class="names" id="names"></h1>
+      <p class="subline" id="subline"></p>
+    </div>
+    <span class="cue" aria-hidden="true"></span>
+  </header>
+
+  <!-- 2. 인사말 -->
+  <section class="sec reveal" aria-labelledby="t-greet">
+    <p class="eyebrow">Invitation</p>
+    <h2 class="h2" id="t-greet">모시는 글</h2>
+    <p class="greet" id="greet"></p>
+    <div class="parents" id="parents"></div>
+  </section>
+
+  <!-- 3. 연락하기 -->
+  <section class="sec reveal" aria-labelledby="t-call">
+    <p class="eyebrow">Contact</p>
+    <h2 class="h2" id="t-call">연락하기</h2>
+    <p class="lead">축하 인사를 전하실 분들께 번호를 열어 두었습니다.</p>
+    <ul class="contacts" id="contacts"></ul>
+  </section>
+
+  <!-- 4. 예식 일시 -->
+  <section class="sec reveal" aria-labelledby="t-when">
+    <p class="eyebrow">Wedding Day</p>
+    <h2 class="h2" id="t-when">예식 일시</h2>
+    <div class="ticket">
+      <dl id="ticketInfo"></dl>
+      <div class="stub"><span>D-DAY</span><b id="stubDay"></b></div>
+    </div>
+    <div class="cal" id="cal" role="table" aria-label="예식이 있는 달의 달력"></div>
+    <p class="dday" id="dday"></p>
+    <div class="btnrow">
+      <button class="btn solid" type="button" id="icsBtn">캘린더에 추가</button>
+      <a class="btn" id="gcal" target="_blank" rel="noopener">구글 캘린더</a>
+    </div>
+  </section>
+
+  <!-- 5. 갤러리 -->
+  <section class="sec reveal" aria-labelledby="t-gal">
+    <p class="eyebrow">Gallery</p>
+    <h2 class="h2" id="t-gal">사진</h2>
+    <div class="grid" id="grid"></div>
+  </section>
+
+  <!-- 6. 오시는 길 -->
+  <section class="sec reveal" aria-labelledby="t-map">
+    <p class="eyebrow">Location</p>
+    <h2 class="h2" id="t-map">오시는 길</h2>
+    <p class="venue-name" id="venueName"></p>
+    <p class="venue-meta" id="venueMeta"></p>
+    <div class="mapbox" id="mapBox"></div>
+    <p class="mapnote" id="mapNote"></p>
+    <div class="btnrow" id="mapBtns"></div>
+    <ul class="transit" id="transit"></ul>
+
+    <h3 class="sub" id="routesTitle"></h3>
+    <p class="lead" style="margin-bottom:0">기차로 도착하시는 곳을 골라 순서대로 따라오세요.</p>
+    <div class="tabs" role="tablist" id="tabs"></div>
+    <div id="routes"></div>
+
+    <div class="taxi">
+      <small id="taxiTitle"></small>
+      <p id="taxiBig"></p>
+      <div class="btnrow"><button class="btn solid" type="button" id="taxiCopy">주소 복사</button></div>
+      <p class="venue-meta" id="taxiNote" style="margin:12px 0 0"></p>
+    </div>
+  </section>
+
+  <!-- 7. 마음 전하실 곳 -->
+  <section class="sec reveal" aria-labelledby="t-gift">
+    <p class="eyebrow">With Heart</p>
+    <h2 class="h2" id="t-gift">마음 전하실 곳</h2>
+    <p class="lead" id="giftLead"></p>
+    <div id="accounts"></div>
+  </section>
+
+  <!-- 선택: 참석 여부 회신 -->
+  <section class="sec reveal" id="rsvpSec" aria-labelledby="t-rsvp" hidden>
+    <p class="eyebrow">RSVP</p>
+    <h2 class="h2" id="t-rsvp">참석 여부 회신</h2>
+    <p class="lead" id="rsvpLead"></p>
+    <div class="btnrow"><a class="btn solid" id="rsvpBtn" target="_blank" rel="noopener">회신하기</a></div>
+  </section>
+
+  <!-- 선택: 방명록 -->
+  <section class="sec reveal" id="guestbookSec" aria-labelledby="t-gb" hidden>
+    <p class="eyebrow">Guestbook</p>
+    <h2 class="h2" id="t-gb">방명록</h2>
+    <p class="lead" id="gbLead"></p>
+    <div class="btnrow"><a class="btn solid" id="gbBtn" target="_blank" rel="noopener">글 남기기</a></div>
+  </section>
+
+  <!-- 8. 공유 -->
+  <section class="sec reveal end" aria-labelledby="t-end">
+    <h2 class="sr" id="t-end">공유</h2>
+    <p id="endMsg"></p>
+    <div class="btnrow">
+      <button class="btn solid" type="button" id="shareBtn">이 청첩장 링크 복사</button>
+    </div>
+  </section>
+
+  <!-- 9. 푸터 -->
+  <footer class="foot">
+    <p class="stampline" id="footStamp"></p>
+    <p id="footText"></p>
+  </footer>
+</main>
+
+<!-- 배경음악 (config.js features.bgm) -->
+<button class="bgm" type="button" id="bgmBtn" hidden aria-pressed="false">
+  <span aria-hidden="true">♪</span><span class="sr" id="bgmLabel">배경음악 재생</span>
+</button>
+
+<!-- 갤러리 라이트박스 -->
+<div class="lb" id="lb" role="dialog" aria-modal="true" aria-label="사진 크게 보기" hidden>
+  <button class="lb-x" type="button" id="lbClose" aria-label="닫기">×</button>
+  <div class="lb-stage" id="lbStage"></div>
+  <button class="nav prev" type="button" id="lbPrev" aria-label="이전 사진">‹</button>
+  <button class="nav next" type="button" id="lbNext" aria-label="다음 사진">›</button>
+  <span class="lb-count" id="lbCount"></span>
+</div>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script src="config.js"></script>
+<script src="main.js"></script>
+</body>
+</html>
