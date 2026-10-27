@@ -194,42 +194,6 @@
     '&location=' + encodeURIComponent(eventPlace) +
     '&details=' + encodeURIComponent(C.siteUrl || '');
 
-  $('#icsBtn').onclick = function () {
-    var ics = [
-      'BEGIN:VCALENDAR', 'VERSION:2.0', 'PRODID:-//wedding-invite//KO', 'CALSCALE:GREGORIAN',
-      'BEGIN:VEVENT',
-      'UID:' + ufmt(startUtc) + '-wedding@invite',
-      'DTSTAMP:' + ufmt(new Date()),
-      'DTSTART:' + ufmt(startUtc),
-      'DTEND:' + ufmt(endUtc),
-      'SUMMARY:' + eventTitle,
-      'LOCATION:' + eventPlace.replace(/,/g, '\\,'),
-      'DESCRIPTION:' + (C.siteUrl || ''),
-      'BEGIN:VALARM', 'TRIGGER:-P1D', 'ACTION:DISPLAY', 'DESCRIPTION:' + eventTitle, 'END:VALARM',
-      'END:VEVENT', 'END:VCALENDAR'
-    ].join('\r\n');
-
-    if (inApp) {
-      toast('카카오톡 안에서는 저장이 막힙니다. 구글 캘린더 버튼을 눌러 주세요');
-      return;
-    }
-    try {
-      /* 앞에 BOM 을 붙여야 윈도우 아웃룩이 한글을 깨지 않고 읽습니다 */
-      var blob = new Blob(['﻿' + ics], { type: 'text/calendar;charset=utf-8' });
-      var url = URL.createObjectURL(blob);
-      var a = document.createElement('a');
-      a.href = url;
-      a.download = 'wedding.ics';
-      document.body.appendChild(a);
-      a.click();
-      a.remove();
-      setTimeout(function () { URL.revokeObjectURL(url); }, 4000);
-      toast('캘린더 파일을 내려받았습니다');
-    } catch (e) {
-      window.location.href = 'data:text/calendar;charset=utf-8,' + encodeURIComponent(ics);
-    }
-  };
-
   /* ---------- 5. 갤러리 ---------- */
   var G = (C.gallery || []).slice();
   var cur = 0;
