@@ -395,17 +395,6 @@
     });
   }
 
-  /* 택시 안내 */
-  var tx = C.taxi;
-  if (tx && tx.big) {
-    $('#taxiTitle').textContent = tx.title || '';
-    $('#taxiBig').textContent = tx.big;
-    $('#taxiNote').textContent = tx.note || '';
-    $('#taxiCopy').onclick = function () { copy(tx.copy || V.address, '주소를 복사했습니다'); };
-  } else {
-    $('#taxiTitle').closest('.taxi').hidden = true;
-  }
-
   /* ---------- 7. 마음 전하실 곳 ---------- */
   $('#giftLead').textContent = C.giftLead || '';
   function accBlock(title, rows, open) {
