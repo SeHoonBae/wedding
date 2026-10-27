@@ -63,7 +63,7 @@ window.CONFIG = {
      네이버 클라우드 플랫폼 > Maps > Dynamic Map 에서 받은 Client ID.
      비어 있거나 도메인 등록이 안 되어 있으면 주소 안내 카드로 바뀝니다.
      발급과 도메인 등록 절차는 DEPLOY.md 를 보세요. */
-  naverMap: { clientId: '', zoom: 17 },        // TODO: clientId
+  naverMap: { clientId: '7l0vdcx6qf', zoom: 17 },        // TODO: clientId
 
   /* --- 대중교통 · 주차 ----------------------------------------- */
   transit: [
