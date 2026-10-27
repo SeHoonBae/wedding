@@ -456,7 +456,7 @@
       }).join('') + '</ul></details>';
   }
   var acc = C.accounts || {};
-  $('#accounts').innerHTML = accBlock('신랑측 계좌번호', acc.groom, true) + accBlock('신부측 계좌번호', acc.bride, false);
+  $('#accounts').innerHTML = accBlock('신랑측 계좌번호', acc.groom, true) + accBlock('신부측 계좌번호', acc.bride, true);
 
   /* ---------- 선택 기능: RSVP · 방명록 · 배경음악 ---------- */
   var F = C.features || {};
