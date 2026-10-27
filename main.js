@@ -327,10 +327,16 @@
     mapDone = true;
   }
 
-  function initNaverMap() {
+  function initNaverMap(retriesLeft) {
     if (!window.naver || !naver.maps) { return mapFallback(); }
     if (hasCoords) { return drawMap(new naver.maps.LatLng(V.lat, V.lng)); }
-    if (!naver.maps.Service) { return mapFallback(); }
+    if (!naver.maps.Service) {
+      /* geocoder 서브모듈은 maps.js 본체와 별도로 비동기 요청되어, onload 시점엔
+         아직 안 끝났을 수 있습니다. 바로 포기하지 않고 짧게 재시도합니다. */
+      if (retriesLeft === undefined) { retriesLeft = 15; }
+      if (retriesLeft > 0) { return setTimeout(function () { initNaverMap(retriesLeft - 1); }, 200); }
+      return mapFallback();
+    }
     /* 좌표가 없으면 주소로 찾습니다. '2층' 같은 꼬리말은 떼고 보냅니다. */
     naver.maps.Service.geocode({ query: V.address.replace(/\s*\d+\s*층\s*$/, '') }, function (status, res) {
       var a = res && res.v2 && res.v2.addresses && res.v2.addresses[0];
