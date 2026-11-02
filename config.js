@@ -60,7 +60,7 @@ window.CONFIG = {
      cover: 커버 한 장. gallery: 갤러리 썸네일.
      assets/ 에 WebP(장당 200KB 안팎)로 넣고 경로를 적으세요.
      '' 로 두면 자리 표시가 보입니다. */
-  cover: 'assets/og.jpg',                                   // TODO: 'assets/cover.webp'
+  cover: 'assets/cover.jpg',   // 1440×2160 (원본 main.jpg 와 같은 2:3 비율). 커버 높이는 사진 비율에 자동으로 맞춰집니다.
   gallery: ['assets/D_M01759마트좌.webp', 'assets/D_M01767마트우.webp', 'assets/D_M01803마트중+.webp', 'assets/D_M01991.webp', 'assets/D_M02008스프레드.webp', '', '', '', ''], // TODO: 'assets/01.webp' ...
 
   /* --- 네이버 지도 ---------------------------------------------

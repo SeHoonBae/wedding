@@ -61,14 +61,17 @@ a{color:var(--accent)}
 @keyframes coverzoom{from{transform:scale(1.08)}to{transform:none}}
 
 /* ---------- 1. 커버 ---------- */
-.cover{position:relative;min-height:100svh;display:flex;flex-direction:column;align-items:center;justify-content:space-between;
-  padding:calc(44px + env(safe-area-inset-top,0px)) 24px calc(64px + env(safe-area-inset-bottom,0px));
-  overflow:hidden;background:#3A2E28;color:#fff;text-align:center}
-.cover-photo{position:absolute;inset:0}
-.cover-photo img,.cover-photo .ph{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+/* 커버 높이는 사진 원본 비율 그대로(잘리지 않음). 글자는 사진 위에 겹쳐 놓습니다. */
+.cover{position:relative;overflow:hidden;background:#3A2E28;color:#fff;text-align:center}
+.cover-photo img{display:block;width:100%;height:auto;aspect-ratio:auto 2/3}
+.cover-photo .ph{display:flex;width:100%;aspect-ratio:2/3}
 .cover::after{content:"";position:absolute;inset:0;pointer-events:none;
   background:linear-gradient(to bottom,rgba(20,14,10,.42) 0%,rgba(20,14,10,.08) 26%,rgba(20,14,10,.08) 62%,rgba(20,14,10,.5) 100%)}
-.cover > *:not(.cover-photo){position:relative;z-index:1}
+.cover > .cover-en,.cover > .cover-title,.cover > .cover-foot{position:absolute;left:24px;right:24px;z-index:1}
+.cover > .cue{z-index:1}
+.cover > .cover-en{top:calc(8% + env(safe-area-inset-top,0px))}
+.cover > .cover-title{top:0;bottom:0;display:flex;align-items:center;justify-content:center;pointer-events:none}
+.cover > .cover-foot{bottom:calc(10% + env(safe-area-inset-bottom,0px))}
 .cover-en{margin:0;font-family:var(--f-latin);font-size:15px;font-variant:small-caps;letter-spacing:.32em;
   text-shadow:0 1px 8px rgba(0,0,0,.35)}
 .cover-title{margin:0;font-weight:400}
