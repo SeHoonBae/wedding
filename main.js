@@ -436,22 +436,45 @@
   }
   if (F.bgm && C.bgm && C.bgm.src) {
     var btn = $('#bgmBtn');
-    var audio = new Audio(C.bgm.src);   /* 자동재생하지 않습니다. 눌러야 켜집니다. */
+    var audio = new Audio(C.bgm.src);
     audio.loop = true;
-    audio.preload = 'none';
+    audio.preload = C.bgm.autoplay === false ? 'none' : 'auto';
     btn.hidden = false;
+    var userPaused = false;   /* 방문자가 직접 끈 뒤에는 다시 켜지 않습니다 */
+    var setState = function (on) {
+      btn.setAttribute('aria-pressed', on ? 'true' : 'false');
+      $('#bgmLabel').textContent = on ? '배경음악 끄기' : '배경음악 재생';
+    };
+    var play = function () { return audio.play().then(function () { setState(true); }); };
+
     btn.onclick = function () {
       if (audio.paused) {
-        audio.play().then(function () {
-          btn.setAttribute('aria-pressed', 'true');
-          $('#bgmLabel').textContent = '배경음악 끄기';
-        }, function () { toast('이 브라우저에서는 소리를 켤 수 없습니다'); });
+        userPaused = false;
+        play().catch(function () { toast('이 브라우저에서는 소리를 켤 수 없습니다'); });
       } else {
+        userPaused = true;
         audio.pause();
-        btn.setAttribute('aria-pressed', 'false');
-        $('#bgmLabel').textContent = '배경음악 재생';
+        setState(false);
       }
     };
+
+    /* 자동재생: 열리자마자 재생을 시도합니다.
+       대부분의 모바일 브라우저(카카오톡 인앱 포함)는 소리 있는 자동재생을 막으므로,
+       막히면 방문자가 화면을 처음 터치·클릭하는 순간 재생합니다. */
+    if (C.bgm.autoplay !== false) {
+      var GESTURES = ['pointerdown', 'touchend', 'click', 'keydown'];
+      var unlock = function (e) {
+        if (e && e.target && e.target.closest && e.target.closest('#bgmBtn')) { return detach(); }
+        detach();
+        if (!userPaused && audio.paused) { play().catch(function () {}); }
+      };
+      var detach = function () {
+        GESTURES.forEach(function (t) { document.removeEventListener(t, unlock, true); });
+      };
+      play().then(detach, function () {
+        GESTURES.forEach(function (t) { document.addEventListener(t, unlock, true); });
+      });
+    }
   }
 
   /* ---------- 8. 공유 · 9. 푸터 ---------- */

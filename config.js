@@ -60,7 +60,7 @@ window.CONFIG = {
      cover: 커버 한 장. gallery: 갤러리 썸네일.
      assets/ 에 WebP(장당 200KB 안팎)로 넣고 경로를 적으세요.
      '' 로 두면 자리 표시가 보입니다. */
-  cover: 'assets/main.jpg',                                   // TODO: 'assets/cover.webp'
+  cover: 'assets/og.jpg',                                   // TODO: 'assets/cover.webp'
   gallery: ['assets/D_M01759마트좌.webp', 'assets/D_M01767마트우.webp', 'assets/D_M01803마트중+.webp', 'assets/D_M01991.webp', 'assets/D_M02008스프레드.webp', '', '', '', ''], // TODO: 'assets/01.webp' ...
 
   /* --- 네이버 지도 ---------------------------------------------
@@ -122,7 +122,9 @@ window.CONFIG = {
      guestbook 과 rsvp 는 서버(또는 외부 폼)가 필요합니다.
      켜는 방법은 DEPLOY.md 의 '선택 기능' 절을 보세요. */
   features: { bgm: true, guestbook: false, rsvp: false },
-  bgm: { src: 'assets/bgm.mp3', title: '배경음악' },
+  /* autoplay: true 면 열자마자 재생을 시도하고, 브라우저가 막으면 첫 터치 때 재생합니다.
+     false 면 ♪ 버튼을 눌러야 켜집니다. */
+  bgm: { src: 'assets/bgm.mp3', title: '배경음악', autoplay: true },
   rsvp: { url: '', lead: '편한 방법으로 참석 여부를 알려 주세요.' },
   guestbook: { url: '', lead: '축하 글을 남겨 주세요.' }
 };
