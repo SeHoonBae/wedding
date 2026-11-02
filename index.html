@@ -1,12 +1,12 @@
 <!doctype html>
-<html lang="ko">
+<html lang="ko" class="js">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="robots" content="noindex, nofollow">
 <meta name="format-detection" content="telephone=no">
-<meta name="theme-color" content="#E4E9E4" media="(prefers-color-scheme: light)">
-<meta name="theme-color" content="#0D1214" media="(prefers-color-scheme: dark)">
+<meta name="theme-color" content="#FFFFFF">
+<meta name="color-scheme" content="light">
 
 <!-- ==========================================================
      카카오톡 미리보기(Open Graph)
@@ -30,7 +30,9 @@
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Gowun+Dodum&family=Hahmlet:wght@500;700&display=swap">
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Allura&family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,900;1,9..144,400&family=Gowun+Batang:wght@400;700&family=Nanum+Myeongjo:wght@400;700&display=swap">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -40,9 +42,10 @@
   <!-- 1. 커버 -->
   <header class="cover" id="cover">
     <div class="cover-photo" id="coverPhoto"></div>
-    <div class="cover-body">
-      <p class="stampline" id="stampline"></p>
-      <h1 class="names" id="names"></h1>
+    <p class="cover-en" id="coverEn"></p>
+    <h1 class="cover-title"><span class="script" id="coverTitle" aria-hidden="true"></span><span class="sr" id="names"></span></h1>
+    <div class="cover-foot">
+      <p class="cover-date" id="stampline"></p>
       <p class="subline" id="subline"></p>
     </div>
     <span class="cue" aria-hidden="true"></span>
@@ -51,13 +54,14 @@
   <!-- 2. 인사말 -->
   <section class="sec reveal" aria-labelledby="t-greet">
     <p class="eyebrow">Invitation</p>
-    <h2 class="h2" id="t-greet">모시는 글</h2>
+    <h2 class="h2" id="t-greet">초대합니다</h2>
     <p class="greet" id="greet"></p>
-    <div class="parents" id="parents"></div>
+    <span class="rule" aria-hidden="true"></span>
+    <div class="couple" id="parents"></div>
   </section>
 
   <!-- 3. 연락하기 -->
-  <section class="sec reveal" aria-labelledby="t-call">
+  <section class="sec tint reveal" aria-labelledby="t-call">
     <p class="eyebrow">Contact</p>
     <h2 class="h2" id="t-call">연락하기</h2>
     <p class="lead">축하 인사를 전하실 분들께 번호를 열어 두었습니다.</p>
@@ -67,46 +71,52 @@
   <!-- 4. 예식 일시 -->
   <section class="sec reveal" aria-labelledby="t-when">
     <p class="eyebrow">Wedding Day</p>
-    <h2 class="h2" id="t-when">예식 일시</h2>
-    <div class="ticket">
-      <dl id="ticketInfo"></dl>
-      <div class="stub"><span>D-DAY</span><b id="stubDay"></b></div>
-    </div>
+    <h2 class="h2" id="t-when">예식일</h2>
+    <p class="when" id="whenLine"></p>
     <div class="cal" id="cal" role="table" aria-label="예식이 있는 달의 달력"></div>
+    <span class="rule" aria-hidden="true"></span>
     <p class="dday" id="dday"></p>
-    <div class="btnrow">
-      <a class="btn" id="gcal" target="_blank" rel="noopener">구글 캘린더 추가</a>
+    <p class="dnum" id="stubDay"></p>
+    <div class="btnrow center">
+      <a class="btn" id="gcal" target="_blank" rel="noopener">내 캘린더에 저장하기</a>
     </div>
   </section>
 
   <!-- 5. 갤러리 -->
-  <section class="sec reveal" aria-labelledby="t-gal">
+  <section class="sec tint reveal" aria-labelledby="t-gal">
     <p class="eyebrow">Gallery</p>
-    <h2 class="h2" id="t-gal">사진</h2>
+    <h2 class="h2" id="t-gal">우리의 순간</h2>
     <div class="grid" id="grid"></div>
   </section>
 
   <!-- 6. 오시는 길 -->
   <section class="sec reveal" aria-labelledby="t-map">
     <p class="eyebrow">Location</p>
-    <h2 class="h2" id="t-map">오시는 길</h2>
-    <p class="venue-name" id="venueName"></p>
-    <p class="venue-meta" id="venueMeta"></p>
+    <h2 class="h2" id="t-map">장소</h2>
+    <div class="venue">
+      <div class="venue-txt">
+        <p class="venue-name" id="venueName"></p>
+        <p class="venue-meta" id="venueMeta"></p>
+      </div>
+      <button class="mini" type="button" id="venueCopy" data-msg="주소를 복사했습니다">주소 복사</button>
+    </div>
     <div class="mapbox" id="mapBox"></div>
     <p class="mapnote" id="mapNote"></p>
-    <div class="btnrow" id="mapBtns"></div>
+    <div class="navbtns" id="mapBtns"></div>
+
+    <h3 class="sub">오시는 길</h3>
     <ul class="transit" id="transit"></ul>
 
     <h3 class="sub" id="routesTitle"></h3>
-    <p class="lead" style="margin-bottom:0">기차로 도착하시는 곳을 골라 순서대로 따라오세요.</p>
+    <p class="lead left">기차로 도착하시는 곳을 골라 순서대로 따라오세요.</p>
     <div class="tabs" role="tablist" id="tabs"></div>
     <div id="routes"></div>
   </section>
 
   <!-- 7. 마음 전하실 곳 -->
-  <section class="sec reveal" aria-labelledby="t-gift">
+  <section class="sec tint reveal" aria-labelledby="t-gift">
     <p class="eyebrow">With Heart</p>
-    <h2 class="h2" id="t-gift">마음 전하실 곳</h2>
+    <h2 class="h2" id="t-gift">마음 전하기</h2>
     <p class="lead" id="giftLead"></p>
     <div id="accounts"></div>
   </section>
@@ -114,31 +124,32 @@
   <!-- 선택: 참석 여부 회신 -->
   <section class="sec reveal" id="rsvpSec" aria-labelledby="t-rsvp" hidden>
     <p class="eyebrow">RSVP</p>
-    <h2 class="h2" id="t-rsvp">참석 여부 회신</h2>
+    <h2 class="h2" id="t-rsvp">참석 여부를 알려주세요</h2>
     <p class="lead" id="rsvpLead"></p>
-    <div class="btnrow"><a class="btn solid" id="rsvpBtn" target="_blank" rel="noopener">회신하기</a></div>
+    <div class="btnrow center"><a class="btn solid wide" id="rsvpBtn" target="_blank" rel="noopener">회신하기</a></div>
   </section>
 
   <!-- 선택: 방명록 -->
-  <section class="sec reveal" id="guestbookSec" aria-labelledby="t-gb" hidden>
+  <section class="sec tint reveal" id="guestbookSec" aria-labelledby="t-gb" hidden>
     <p class="eyebrow">Guestbook</p>
     <h2 class="h2" id="t-gb">방명록</h2>
     <p class="lead" id="gbLead"></p>
-    <div class="btnrow"><a class="btn solid" id="gbBtn" target="_blank" rel="noopener">글 남기기</a></div>
+    <div class="btnrow center"><a class="btn wide" id="gbBtn" target="_blank" rel="noopener">글 남기기</a></div>
   </section>
 
   <!-- 8. 공유 -->
   <section class="sec reveal end" aria-labelledby="t-end">
-    <h2 class="sr" id="t-end">공유</h2>
-    <p id="endMsg"></p>
-    <div class="btnrow">
-      <button class="btn solid" type="button" id="shareBtn">이 청첩장 링크 복사</button>
+    <p class="eyebrow">Thank You</p>
+    <h2 class="h2" id="t-end">청첩장 공유하기</h2>
+    <p class="closing" id="endMsg"></p>
+    <div class="btnrow center">
+      <button class="btn wide" type="button" id="shareBtn">링크 복사하기</button>
     </div>
   </section>
 
   <!-- 9. 푸터 -->
   <footer class="foot">
-    <p class="stampline" id="footStamp"></p>
+    <p class="foot-date" id="footStamp"></p>
     <p id="footText"></p>
   </footer>
 </main>

@@ -22,7 +22,9 @@
   var g1 = g.name.slice(1), b1 = b.name.slice(1);   // 이름에서 성을 뗀 부분
   var timeLabel = (H >= 12 ? '오후 ' : '오전 ') + (H > 12 ? H - 12 : H) + '시' + (MIN ? ' ' + MIN + '분' : '');
   var dateLabel = Y + '년 ' + M + '월 ' + D + '일 ' + DOW[dow] + '요일';
-  var stampText = '’' + String(Y).slice(2) + ' ' + M + ' ' + D;
+  var pad = function (n) { return (n < 10 ? '0' : '') + n; };
+  var stampText = Y + '.' + pad(M) + '.' + pad(D);
+  var enTime = (H % 12 || 12) + ':' + pad(MIN) + ' ' + (H >= 12 ? 'PM' : 'AM');
   var placeLabel = V.name + (V.hall ? ' ' + V.hall : '');
   var hasCoords = typeof V.lat === 'number' && typeof V.lng === 'number';
 
@@ -125,17 +127,22 @@
 
   /* ---------- 1. 커버 ---------- */
   $('#coverPhoto').innerHTML = photo(C.cover, 0, g1 + '와 ' + b1 + '의 사진', '대표 사진을<br>넣어주세요');
-  $('#stampline').textContent = stampText + '  ' + ENDOW[dow];
-  $('#names').innerHTML = esc(g1) + '<span>&amp;</span>' + esc(b1);
-  $('#subline').textContent = dateLabel + ' ' + timeLabel + ', ' + placeLabel;
+  var gEn = g.en || g1, bEn = b.en || b1;
+  $('#coverEn').textContent = gEn + ' & ' + bEn;
+  $('#coverTitle').innerHTML = String(C.coverTitle || 'The Wedding').split(' ').map(function (w) {
+    return '<span>' + esc(w) + '</span>';
+  }).join('');
+  $('#names').textContent = g.name + '와 ' + b.name + '의 결혼식';
+  $('#stampline').textContent = stampText;
+  $('#subline').textContent = ENDOW[dow] + ' ' + enTime + '  ·  ' + placeLabel;
 
   /* ---------- 2. 인사말 ---------- */
   $('#greet').textContent = C.greeting;
   function parentLine(label, p) {
-    return '<p><em>' + label + '</em><strong>' + esc(p.father.name) + ' · ' + esc(p.mother.name) + '</strong>' +
-      '<span class="of">의 ' + esc(p.rank) + ' <strong>' + esc(p.name.slice(1)) + '</strong></span></p>';
+    return '<div><small class="role">' + label + '</small><strong>' + esc(p.name) + '</strong>' +
+      '<span>' + esc(p.father.name) + ' · ' + esc(p.mother.name) + '의 ' + esc(p.rank) + '</span></div>';
   }
-  $('#parents').innerHTML = parentLine('신랑측', g) + parentLine('신부측', b);
+  $('#parents').innerHTML = parentLine('신랑', g) + parentLine('신부', b);
 
   /* ---------- 3. 연락하기 ---------- */
   var people = [
@@ -156,15 +163,12 @@
   }
 
   /* ---------- 4. 예식 일시 ---------- */
-  $('#ticketInfo').innerHTML =
-    '<div><dt>DATE</dt><dd>' + dateLabel + '</dd></div>' +
-    '<div><dt>TIME</dt><dd>' + timeLabel + '</dd></div>' +
-    '<div><dt>PLACE</dt><dd>' + esc(V.name) + (V.hall ? '<small>' + esc(V.hall) + '</small>' : '') + '</dd></div>';
+  $('#whenLine').innerHTML = esc(dateLabel) + '<br>' + esc(timeLabel) + ' · ' + esc(placeLabel);
 
   var today = new Date();
   var t0 = new Date(today.getFullYear(), today.getMonth(), today.getDate());
   var diff = Math.round((new Date(Y, M - 1, D) - t0) / 86400000);
-  $('#dday').innerHTML = diff > 0 ? '결혼식까지 <b>' + diff + '</b>일 남았습니다'
+  $('#dday').innerHTML = diff > 0 ? '앞으로 <b>' + diff + '일</b> 남았어요'
     : diff === 0 ? '<b>오늘</b>이 결혼식입니다'
     : '결혼한 지 <b>' + (-diff) + '</b>일 되었습니다';
   $('#stubDay').textContent = diff > 0 ? 'D-' + diff : diff === 0 ? 'D-DAY' : 'D+' + (-diff);
@@ -176,7 +180,8 @@
   for (var i = 0; i < first; i++) { cal += '<div></div>'; }
   for (var d = 1; d <= days; d++) {
     var wd = (first + d - 1) % 7;
-    cal += '<div class="d' + (d === D ? ' hit' : '') + (wd === 0 && d !== D ? ' sun' : '') + '">' + d + '</div>';
+    cal += '<div class="d' + (d === D ? ' hit' : '') + (wd === 0 && d !== D ? ' sun' : '') + (wd === 6 && d !== D ? ' sat' : '') + '">' +
+      (d === D ? '<span>' + d + '</span><small>' + enTime + '</small>' : d) + '</div>';
   }
   $('#cal').innerHTML = cal;
 
@@ -256,7 +261,7 @@
 
   /* ---------- 6. 오시는 길 ---------- */
   $('#venueName').textContent = placeLabel;
-  $('#venueMeta').textContent = [V.address, V.tel].filter(Boolean).join(' · ');
+  $('#venueMeta').textContent = [V.address, V.tel ? 'Tel. ' + V.tel : ''].filter(Boolean).join('\n');
 
   var qName = encodeURIComponent(V.name);
   var qAddr = encodeURIComponent(V.address);
@@ -275,10 +280,10 @@
     : '';
 
   $('#mapBtns').innerHTML =
-    '<button class="btn solid" type="button" id="btnNaverApp">네이버지도 길찾기</button>' +
-    '<a class="btn" href="' + kakaoWeb + '" target="_blank" rel="noopener">카카오맵</a>' +
-    (tmapApp ? '<button class="btn" type="button" id="btnTmap">티맵</button>' : '') +
-    '<button class="btn" type="button" data-copy="' + esc(V.address) + '" data-msg="주소를 복사했습니다">주소 복사</button>';
+    '<button class="nbtn" type="button" id="btnNaverApp">네이버지도</button>' +
+    '<a class="nbtn" href="' + kakaoWeb + '" target="_blank" rel="noopener">카카오맵</a>' +
+    (tmapApp ? '<button class="nbtn" type="button" id="btnTmap">티맵</button>' : '');
+  $('#venueCopy').setAttribute('data-copy', V.address);
   $('#btnNaverApp').onclick = function () { openApp(naverApp, naverWeb); };
   if (tmapApp) { $('#btnTmap').onclick = function () { openApp(tmapApp, naverWeb); }; }
 
@@ -457,16 +462,30 @@
   $('#footStamp').textContent = stampText;
   $('#footText').textContent = C.footerText || (g1 + ' ♥ ' + b1 + ' · ' + dateLabel);
 
-  /* ---------- 섹션 진입 페이드업 ---------- */
-  var secs = [].slice.call(document.querySelectorAll('.reveal'));
+  /* ---------- 스크롤 등장 애니메이션 ----------
+     섹션 안의 요소(목록은 항목 하나하나)를 화면에 들어올 때 차례로 띄웁니다. */
+  var LIST = '.contacts, .grid, .couple, .transit, .navbtns, #accounts, .btnrow';
+  var items = [];
+  [].slice.call(document.querySelectorAll('.reveal')).forEach(function (sec) {
+    [].slice.call(sec.children).forEach(function (el) {
+      if (el.matches(LIST)) { items.push.apply(items, [].slice.call(el.children)); }
+      else { items.push(el); }
+    });
+  });
+  items.forEach(function (el) { el.classList.add('rv'); });
+
   if (reduce || !('IntersectionObserver' in window)) {
-    secs.forEach(function (s) { s.classList.add('in'); });
+    items.forEach(function (el) { el.classList.add('in'); });
   } else {
     var io = new IntersectionObserver(function (es) {
+      var n = 0;
       es.forEach(function (e) {
-        if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); }
+        if (!e.isIntersecting) { return; }
+        e.target.style.setProperty('--d', Math.min(n++, 6) * 110 + 'ms');
+        e.target.classList.add('in');
+        io.unobserve(e.target);
       });
-    }, { rootMargin: '0px 0px -12% 0px', threshold: 0.08 });
-    secs.forEach(function (s) { io.observe(s); });
+    }, { rootMargin: '0px 0px -10% 0px', threshold: 0 });
+    items.forEach(function (el) { io.observe(el); });
   }
 })();

@@ -21,15 +21,19 @@ window.CONFIG = {
   /* --- 신랑 · 신부 ---------------------------------------------
      tel 은 '연락하기' 버튼에 쓰입니다. 비우면 그 버튼은 숨습니다. */
   groom: {                                     // TODO: 이름·성함·번호 전부
-    name: '배세훈', rank: '둘째', tel: '010-0000-0000',
+    name: '배세훈', en: 'Sehoon', rank: '둘째', tel: '010-0000-0000',
     father: { name: '배정열', tel: '010-0000-0000' },
     mother: { name: '손승순', tel: '010-0000-0000' }
   },
   bride: {                                     // TODO
-    name: '황초희', rank: '장녀', tel: '010-0000-0000',
+    name: '황초희', en: 'Chohee', rank: '장녀', tel: '010-0000-0000',
     father: { name: '황기순', tel: '010-0000-0000' },
     mother: { name: '박노영', tel: '010-0000-0000' }
   },
+
+  /* --- 커버 영문 문구 -----------------------------------------
+     커버 가운데 손글씨 제목입니다. 위쪽 영문 이름은 groom.en / bride.en 을 씁니다. */
+  coverTitle: 'The Wedding',                   // TODO: 영문 이름 철자 확인
 
   /* --- 예식 일시 ----------------------------------------------- */
   date: '2027-02-20',        // YYYY-MM-DD
@@ -56,8 +60,8 @@ window.CONFIG = {
      cover: 커버 한 장. gallery: 갤러리 썸네일.
      assets/ 에 WebP(장당 200KB 안팎)로 넣고 경로를 적으세요.
      '' 로 두면 자리 표시가 보입니다. */
-  cover: '',                                   // TODO: 'assets/cover.webp'
-  gallery: ['', '', '', '', '', '', '', '', ''], // TODO: 'assets/01.webp' ...
+  cover: 'assets/main.jpg',                                   // TODO: 'assets/cover.webp'
+  gallery: ['assets/D_M01759마트좌.webp', 'assets/D_M01767마트우.webp', 'assets/D_M01803마트중+.webp', 'assets/D_M01991.webp', 'assets/D_M02008스프레드.webp', '', '', '', ''], // TODO: 'assets/01.webp' ...
 
   /* --- 네이버 지도 ---------------------------------------------
      네이버 클라우드 플랫폼 > Maps > Dynamic Map 에서 받은 Client ID.
@@ -117,7 +121,7 @@ window.CONFIG = {
   /* --- 선택 기능 ----------------------------------------------
      guestbook 과 rsvp 는 서버(또는 외부 폼)가 필요합니다.
      켜는 방법은 DEPLOY.md 의 '선택 기능' 절을 보세요. */
-  features: { bgm: false, guestbook: false, rsvp: false },
+  features: { bgm: true, guestbook: false, rsvp: false },
   bgm: { src: 'assets/bgm.mp3', title: '배경음악' },
   rsvp: { url: '', lead: '편한 방법으로 참석 여부를 알려 주세요.' },
   guestbook: { url: '', lead: '축하 글을 남겨 주세요.' }
