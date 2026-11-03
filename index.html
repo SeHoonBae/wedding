@@ -87,6 +87,7 @@
     <p class="eyebrow">Gallery</p>
     <h2 class="h2" id="t-gal">우리의 순간</h2>
     <div class="grid" id="grid"></div>
+    <button class="more" type="button" id="galMore" aria-expanded="false" aria-controls="grid" hidden><span>더 보기</span></button>
   </section>
 
   <!-- 6. 오시는 길 -->
@@ -161,11 +162,14 @@
 
 <!-- 갤러리 라이트박스 -->
 <div class="lb" id="lb" role="dialog" aria-modal="true" aria-label="사진 크게 보기" hidden>
-  <button class="lb-x" type="button" id="lbClose" aria-label="닫기">×</button>
-  <div class="lb-stage" id="lbStage"></div>
-  <button class="nav prev" type="button" id="lbPrev" aria-label="이전 사진">‹</button>
-  <button class="nav next" type="button" id="lbNext" aria-label="다음 사진">›</button>
-  <span class="lb-count" id="lbCount"></span>
+  <div class="lb-track" id="lbTrack"></div>
+  <button class="lb-x" type="button" id="lbClose" aria-label="닫기"></button>
+  <button class="nav prev" type="button" id="lbPrev" aria-label="이전 사진"></button>
+  <button class="nav next" type="button" id="lbNext" aria-label="다음 사진"></button>
+  <div class="lb-foot">
+    <div class="lb-bar" aria-hidden="true"><span id="lbBar"></span></div>
+    <span class="lb-count" id="lbCount" aria-live="polite"></span>
+  </div>
 </div>
 
 <div class="toast" id="toast" role="status" aria-live="polite"></div>

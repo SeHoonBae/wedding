@@ -133,27 +133,41 @@ a{color:var(--accent)}
 .btn.wide{width:100%}
 
 /* ---------- 5. 갤러리 ---------- */
-.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:4px;margin-inline:-8px}
-.grid button{position:relative;aspect-ratio:3/4;padding:0;border:0;border-radius:4px;overflow:hidden;background:var(--line);cursor:pointer}
-.grid button:first-child{grid-column:span 2;grid-row:span 2;aspect-ratio:auto}
+.grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:2px;margin-inline:-8px}
+.grid button{position:relative;aspect-ratio:1;padding:0;border:0;overflow:hidden;background:var(--line);cursor:pointer}
 .grid img,.grid .ph{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.grid .extra{display:none}
+.grid.open .extra{display:block;animation:fadein .4s ease}
+.more{display:inline-flex;align-items:center;gap:8px;min-height:44px;margin-top:18px;padding:0 20px;border:0;background:none;
+  color:var(--ink);font-size:15px;cursor:pointer}
+.more::after{content:"";width:7px;height:7px;border-right:1.5px solid currentColor;border-bottom:1.5px solid currentColor;
+  transform:translateY(-2px) rotate(45deg);transition:transform .25s}
+.more[aria-expanded="true"]::after{transform:translateY(2px) rotate(-135deg)}
 
-/* 라이트박스 */
-.lb{position:fixed;inset:0;z-index:70;background:rgba(24,18,14,.95);display:flex;align-items:center;justify-content:center;
-  padding:max(16px,env(safe-area-inset-top,0px)) 16px calc(16px + env(safe-area-inset-bottom,0px));touch-action:pan-y}
-.lb-stage{position:relative;width:100%;max-width:520px;aspect-ratio:4/5;user-select:none;-webkit-user-select:none}
-.lb-stage img{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;-webkit-user-drag:none}
-.lb-stage .ph{position:absolute;inset:0;width:100%;height:100%}
-.lb-x{position:absolute;top:calc(8px + env(safe-area-inset-top,0px));right:10px;width:44px;height:44px;
-  border:0;border-radius:50%;background:rgba(255,255,255,.14);color:#fff;font-size:26px;line-height:1;cursor:pointer;z-index:2}
-.lb-count{position:absolute;left:50%;transform:translateX(-50%);bottom:calc(16px + env(safe-area-inset-bottom,0px));
-  font-family:var(--f-latin);font-size:14px;letter-spacing:.1em;color:rgba(255,255,255,.8)}
-.nav{position:absolute;top:50%;transform:translateY(-50%);width:44px;height:44px;border:0;border-radius:50%;
-  background:rgba(255,255,255,.14);color:#fff;font-size:24px;line-height:1;cursor:pointer;z-index:2}
-.nav.prev{left:8px}
-.nav.next{right:8px}
-.fade{animation:fadein .3s ease}
-@keyframes fadein{from{opacity:.2}to{opacity:1}}
+/* 사진 뷰어: 옆으로 밀어 넘기기 (scroll-snap) */
+.lb{position:fixed;inset:0;z-index:70;background:#110D0B;overscroll-behavior:contain}
+.lb-track{position:absolute;inset:0;display:flex;overflow-x:auto;overflow-y:hidden;scroll-snap-type:x mandatory;
+  overscroll-behavior-x:contain;-webkit-overflow-scrolling:touch;scrollbar-width:none}
+.lb-track::-webkit-scrollbar{display:none}
+.lb-slide{position:relative;flex:0 0 100%;scroll-snap-align:center;scroll-snap-stop:always;
+  padding:calc(64px + env(safe-area-inset-top,0px)) 0 calc(72px + env(safe-area-inset-bottom,0px))}
+.lb-slide img{display:block;width:100%;height:100%;object-fit:contain;user-select:none;-webkit-user-select:none;-webkit-user-drag:none}
+.lb-slide .ph{position:absolute;inset:64px 16px 72px}
+.lb-x{position:absolute;top:calc(10px + env(safe-area-inset-top,0px));right:8px;width:44px;height:44px;border:0;background:none;cursor:pointer;z-index:2}
+.lb-x::before,.lb-x::after{content:"";position:absolute;top:21px;left:11px;width:22px;height:1.5px;background:#fff;transform:rotate(45deg)}
+.lb-x::after{transform:rotate(-45deg)}
+.nav{position:absolute;top:50%;transform:translateY(-50%);width:44px;height:64px;border:0;background:none;cursor:pointer;z-index:2}
+.nav::before{content:"";position:absolute;top:50%;left:50%;width:12px;height:12px;border-left:2px solid #fff;border-bottom:2px solid #fff}
+.nav.prev{left:2px}
+.nav.prev::before{transform:translate(-30%,-50%) rotate(45deg)}
+.nav.next{right:2px}
+.nav.next::before{transform:translate(-70%,-50%) rotate(-135deg)}
+.nav:disabled{opacity:.25;cursor:default}
+.lb-foot{position:absolute;left:0;right:0;bottom:0;padding:0 24px calc(18px + env(safe-area-inset-bottom,0px));z-index:2;pointer-events:none;text-align:center}
+.lb-bar{height:3px;border-radius:3px;background:rgba(255,255,255,.18);overflow:hidden}
+.lb-bar span{display:block;height:100%;width:0;background:var(--accent);transition:width .25s ease}
+.lb-count{display:block;margin-top:12px;font-family:var(--f-latin);font-size:14px;letter-spacing:.1em;color:rgba(255,255,255,.8)}
+@keyframes fadein{from{opacity:0}to{opacity:1}}
 
 /* ---------- 6. 장소 · 오시는 길 ---------- */
 .venue{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;text-align:left;margin-bottom:16px}
@@ -233,7 +247,8 @@ a{color:var(--accent)}
   .js .rv{opacity:1;transform:none;transition:none}
   .js .cover-photo,.js .cover-en,.js .cover-title,.js .cover-foot{animation:none}
   .toast{transition:none}
-  .fade{animation:none}
+  .grid.open .extra{animation:none}
+  .lb-bar span,.more::after{transition:none}
   .cue{animation:none;opacity:.6}
   .acc summary::after{transition:none}
 }

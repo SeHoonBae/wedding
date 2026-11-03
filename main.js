@@ -199,63 +199,110 @@
     '&location=' + encodeURIComponent(eventPlace) +
     '&details=' + encodeURIComponent(C.siteUrl || '');
 
-  /* ---------- 5. 갤러리 ---------- */
-  var G = (C.gallery || []).slice();
-  var cur = 0;
+  /* ---------- 5. 갤러리 ----------
+     처음엔 galleryInitial 장만 보이고 '더 보기'로 전체를 펼칩니다.
+     사진을 누르면 전체 화면 뷰어가 열리고, 옆으로 밀어 한 장씩 넘깁니다(CSS scroll-snap). */
+  var G = (C.gallery || []).filter(Boolean);
+  if (!G.length && (C.gallery || []).length) { G = C.gallery.slice(); }   /* 사진이 하나도 없으면 자리표시 */
+  var FIRST = Math.max(1, +C.galleryInitial || 9);
+  var grid = $('#grid'), more = $('#galMore');
+
   if (!G.length) {
-    $('#grid').closest('.sec').hidden = true;
+    grid.closest('.sec').hidden = true;
   } else {
-    $('#grid').innerHTML = G.map(function (s, i) {
-      return '<button type="button" data-i="' + i + '" aria-label="' + (i + 1) + '번 사진 크게 보기">' +
-        photo(s, i, '사진 ' + (i + 1), i + 1, true) + '</button>';
+    grid.innerHTML = G.map(function (s, i) {
+      return '<button type="button" data-i="' + i + '"' + (i >= FIRST ? ' class="extra"' : '') +
+        ' aria-label="' + (i + 1) + '번 사진 크게 보기">' + photo(s, i, '사진 ' + (i + 1), i + 1, true) + '</button>';
     }).join('');
+    if (G.length > FIRST) {
+      more.hidden = false;
+      more.onclick = function () {
+        var open = !grid.classList.contains('open');
+        grid.classList.toggle('open', open);
+        more.setAttribute('aria-expanded', open);
+        more.firstChild.textContent = open ? '접기' : '더 보기';
+        if (!open) {   /* 접었을 때 갤러리 위쪽이 화면 밖이면 갤러리 처음으로 돌아갑니다 */
+          var sec = grid.closest('.sec');
+          if (sec.getBoundingClientRect().top < 0) { sec.scrollIntoView({ block: 'start', behavior: reduce ? 'auto' : 'smooth' }); }
+        }
+      };
+    }
   }
 
-  var lb = $('#lb'), lastFocus = null;
-  function lbShow(i, animate) {
-    cur = (i + G.length) % G.length;
-    var st = $('#lbStage');
-    st.innerHTML = photo(G[cur], cur, g1 + '와 ' + b1 + ' 사진 ' + (cur + 1), '사진 ' + (cur + 1));
-    if (animate && !reduce && st.firstElementChild) { st.firstElementChild.classList.add('fade'); }
+  var lb = $('#lb'), track = $('#lbTrack'), cur = 0, lastFocus = null, built = false, viaHistory = false;
+  function loadNear(i) {
+    [i - 1, i, i + 1].forEach(function (k) {
+      var img = track.children[k] && track.children[k].querySelector('img');
+      if (img && img.loading === 'lazy') { img.loading = 'eager'; }
+    });
+  }
+  function setCount(i) {
+    cur = Math.max(0, Math.min(G.length - 1, i));
     $('#lbCount').textContent = (cur + 1) + ' / ' + G.length;
+    $('#lbBar').style.width = ((cur + 1) / G.length * 100) + '%';
+    $('#lbPrev').disabled = cur === 0;
+    $('#lbNext').disabled = cur === G.length - 1;
+    loadNear(cur);
+  }
+  function go(i, smooth) {
+    i = Math.max(0, Math.min(G.length - 1, i));
+    track.scrollTo({ left: i * track.clientWidth, behavior: smooth && !reduce ? 'smooth' : 'auto' });
+    setCount(i);
   }
   function lbOpen(i) {
+    if (!built) {
+      track.innerHTML = G.map(function (s, k) {
+        return '<div class="lb-slide">' + photo(s, k, g1 + '와 ' + b1 + ' 사진 ' + (k + 1), '사진 ' + (k + 1), true) + '</div>';
+      }).join('');
+      built = true;
+    }
     lastFocus = document.activeElement;
     lb.hidden = false;
     document.body.style.overflow = 'hidden';
-    lbShow(i, false);
+    go(i, false);
     $('#lbClose').focus();
+    try { history.pushState({ lb: 1 }, ''); viaHistory = true; } catch (e) { viaHistory = false; }
   }
-  function lbClose() {
+  function lbClose(fromPop) {
+    if (lb.hidden) { return; }
     lb.hidden = true;
     document.body.style.overflow = '';
     if (lastFocus && lastFocus.focus) { lastFocus.focus(); }
+    if (viaHistory && !fromPop) { viaHistory = false; history.back(); }
+    viaHistory = false;
   }
-  $('#grid').addEventListener('click', function (e) {
+  window.addEventListener('popstate', function () { lbClose(true); });   /* 휴대폰 뒤로가기 = 닫기 */
+
+  grid.addEventListener('click', function (e) {
     var t = e.target.closest('button[data-i]');
     if (t) { lbOpen(+t.getAttribute('data-i')); }
   });
-  $('#lbClose').onclick = lbClose;
-  $('#lbPrev').onclick = function () { lbShow(cur - 1, true); };
-  $('#lbNext').onclick = function () { lbShow(cur + 1, true); };
-  lb.addEventListener('click', function (e) {
-    if (e.target === lb || e.target === $('#lbStage')) { lbClose(); }
-  });
+  $('#lbClose').onclick = function () { lbClose(false); };
+  $('#lbPrev').onclick = function () { go(cur - 1, true); };
+  $('#lbNext').onclick = function () { go(cur + 1, true); };
+  var ticking = false;
+  track.addEventListener('scroll', function () {
+    if (ticking) { return; }
+    ticking = true;
+    requestAnimationFrame(function () {
+      ticking = false;
+      if (track.clientWidth) { setCount(Math.round(track.scrollLeft / track.clientWidth)); }
+    });
+  }, { passive: true });
+  window.addEventListener('resize', function () { if (!lb.hidden) { go(cur, false); } });
   document.addEventListener('keydown', function (e) {
     if (lb.hidden) { return; }
-    if (e.key === 'Escape') { lbClose(); }
-    if (e.key === 'ArrowLeft') { lbShow(cur - 1, true); }
-    if (e.key === 'ArrowRight') { lbShow(cur + 1, true); }
+    if (e.key === 'Escape') { lbClose(false); }
+    if (e.key === 'ArrowLeft') { go(cur - 1, true); }
+    if (e.key === 'ArrowRight') { go(cur + 1, true); }
   });
+  /* 위아래로 크게 쓸어내리면 닫기 (옆으로 넘기기는 브라우저 기본 스크롤이 처리) */
   var sx = null, sy = null;
-  lb.addEventListener('touchstart', function (e) {
-    sx = e.touches[0].clientX; sy = e.touches[0].clientY;
-  }, { passive: true });
-  lb.addEventListener('touchend', function (e) {
+  track.addEventListener('touchstart', function (e) { sx = e.touches[0].clientX; sy = e.touches[0].clientY; }, { passive: true });
+  track.addEventListener('touchend', function (e) {
     if (sx === null) { return; }
     var dx = e.changedTouches[0].clientX - sx, dy = e.changedTouches[0].clientY - sy;
-    if (Math.abs(dx) > 40 && Math.abs(dx) > Math.abs(dy)) { lbShow(cur + (dx < 0 ? 1 : -1), true); }
-    else if (dy > 70 && Math.abs(dy) > Math.abs(dx)) { lbClose(); }
+    if (Math.abs(dy) > 90 && Math.abs(dy) > Math.abs(dx) * 1.5) { lbClose(false); }
     sx = sy = null;
   });
 
