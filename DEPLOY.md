@@ -46,13 +46,26 @@ npx --yes serve -l 8080           # Node 가 있을 때
 
 ### 사진 넣기
 
-1. 사진을 WebP 로 바꿉니다. 갤러리는 장당 **200KB 안팎**, 가로 1200px 정도면 충분합니다.
-   (변환: <https://squoosh.app> 에서 끌어다 놓고 WebP 로 저장)
-2. `assets/` 에 넣고 `config.js` 의 경로를 적습니다.
+**갤러리 사진** — 원본을 그대로 올리면 안 됩니다. (원본 7000px 한 장은 휴대폰에서 풀면 100MB가 넘어
+"더 보기"와 크게 보기가 매우 느려집니다.) 아래 스크립트가 용도별로 두 벌을 만들어 줍니다.
+
+1. 원본 사진(JPG/PNG/WebP)을 `_originals/gallery/` 에 넣습니다. 파일 이름 순서대로 갤러리에 나옵니다.
+   이 폴더는 `.gitignore` 에 들어 있어 배포되지 않습니다.
+2. [ImageMagick](https://imagemagick.org) 을 설치한 뒤 프로젝트 폴더에서 실행합니다.
+   ```powershell
+   powershell -ExecutionPolicy Bypass -File tools\make-gallery.ps1
+   ```
+   - `assets/gallery/이름.webp` : 긴 변 1600px (크게 보기용, 장당 수십~수백 KB)
+   - `assets/gallery/thumb/이름.webp` : 짧은 변 420px (격자용, 장당 5~50KB)
+   - 이미 만든 사진은 건너뜁니다. 다시 만들려면 `-Force` 를 붙입니다.
+3. 마지막에 출력되는 `gallery: [...]` 줄을 `config.js` 에 붙여 넣습니다. (`galleryThumbs: true` 유지)
+
+**커버 사진**은 JPG 한 장(긴 변 2160px 정도, 1MB 이하)을 `assets/cover.jpg` 로 둡니다.
 
 ```js
-cover: 'assets/cover.webp',
-gallery: ['assets/01.webp', 'assets/02.webp', 'assets/03.webp'],
+cover: 'assets/cover.jpg',
+galleryThumbs: true,
+gallery: ['assets/gallery/01.webp', 'assets/gallery/02.webp'],
 ```
 
 사진을 아직 안 넣으면 자리 표시가 보입니다. 그대로 두고 먼저 배포해도 괜찮습니다.

@@ -207,12 +207,30 @@
   var FIRST = Math.max(1, +C.galleryInitial || 9);
   var grid = $('#grid'), more = $('#galMore');
 
+  /* 썸네일 경로: assets/gallery/이름.webp → assets/gallery/thumb/이름.webp
+     (tools/make-gallery.ps1 이 두 벌을 만듭니다. 썸네일이 없으면 큰 사진으로 대체) */
+  function thumbOf(src) {
+    return C.galleryThumbs ? String(src).replace(/\/([^\/]+)$/, '/thumb/$1') : src;
+  }
+  function thumbImg(src, i) {
+    if (!src) { return photo('', i, '', i + 1); }
+    return '<img src="' + esc(thumbOf(src)) + '" data-full="' + esc(src) + '" alt="사진 ' + (i + 1) + '"' +
+      ' width="420" height="630" loading="lazy" decoding="async" draggable="false">';
+  }
+  /* 썸네일을 못 불러오면 큰 사진으로 한 번만 바꿉니다 */
+  document.addEventListener('error', function (e) {
+    var img = e.target;
+    if (img.tagName === 'IMG' && img.getAttribute('data-full') && img.src.indexOf('/thumb/') > -1) {
+      img.src = img.getAttribute('data-full');
+    }
+  }, true);
+
   if (!G.length) {
     grid.closest('.sec').hidden = true;
   } else {
     grid.innerHTML = G.map(function (s, i) {
       return '<button type="button" data-i="' + i + '"' + (i >= FIRST ? ' class="extra"' : '') +
-        ' aria-label="' + (i + 1) + '번 사진 크게 보기">' + photo(s, i, '사진 ' + (i + 1), i + 1, true) + '</button>';
+        ' aria-label="' + (i + 1) + '번 사진 크게 보기">' + thumbImg(s, i) + '</button>';
     }).join('');
     if (G.length > FIRST) {
       more.hidden = false;
@@ -230,10 +248,11 @@
   }
 
   var lb = $('#lb'), track = $('#lbTrack'), cur = 0, lastFocus = null, built = false, viaHistory = false;
+  /* 큰 사진은 현재 장과 앞뒤 2장까지만 받습니다. 받기 전에는 썸네일이 먼저 보입니다. */
   function loadNear(i) {
-    [i - 1, i, i + 1].forEach(function (k) {
-      var img = track.children[k] && track.children[k].querySelector('img');
-      if (img && img.loading === 'lazy') { img.loading = 'eager'; }
+    [i, i + 1, i - 1, i + 2, i - 2].forEach(function (k) {
+      var hi = track.children[k] && track.children[k].querySelector('.lb-hi');
+      if (hi && !hi.getAttribute('src')) { hi.src = hi.getAttribute('data-src'); }
     });
   }
   function setCount(i) {
@@ -252,8 +271,15 @@
   function lbOpen(i) {
     if (!built) {
       track.innerHTML = G.map(function (s, k) {
-        return '<div class="lb-slide">' + photo(s, k, g1 + '와 ' + b1 + ' 사진 ' + (k + 1), '사진 ' + (k + 1), true) + '</div>';
+        if (!s) { return '<div class="lb-slide">' + photo('', k, '', '사진 ' + (k + 1)) + '</div>'; }
+        return '<div class="lb-slide">' +
+          '<img class="lb-lo" src="' + esc(thumbOf(s)) + '" data-full="' + esc(s) + '" alt="" aria-hidden="true" loading="lazy" decoding="async" draggable="false">' +
+          '<img class="lb-hi" data-src="' + esc(s) + '" alt="' + esc(g1 + '와 ' + b1 + ' 사진 ' + (k + 1)) + '" decoding="async" draggable="false">' +
+          '</div>';
       }).join('');
+      track.addEventListener('load', function (e) {
+        if (e.target.classList && e.target.classList.contains('lb-hi')) { e.target.classList.add('ok'); }
+      }, true);
       built = true;
     }
     lastFocus = document.activeElement;
