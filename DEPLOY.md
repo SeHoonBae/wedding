@@ -141,7 +141,7 @@ siteUrl: 'https://내아이디.github.io/wedding/',   // 끝에 / 를 붙이세�
 ```html
 <title>민준 ♥ 서연 결혼합니다</title>
 <meta property="og:title" content="민준 ♥ 서연 결혼합니다">
-<meta property="og:description" content="2027년 2월 20일 토요일 오후 12시 20분, 레노스블랑쉬 2층">
+<meta property="og:description" content="2027년 2월 20일 토요일 오후 12시 10분, 레노스블랑쉬 2층">
 <meta property="og:image" content="https://내아이디.github.io/wedding/assets/og.jpg">
 <meta property="og:url" content="https://내아이디.github.io/wedding/">
 ```
