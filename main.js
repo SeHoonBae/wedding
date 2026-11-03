@@ -550,10 +550,7 @@
     }
   }
 
-  /* ---------- 8. 공유 · 9. 푸터 ---------- */
-  $('#endMsg').textContent = C.endMessage || '';
-  var shareUrl = /^https?:/.test(location.protocol) ? location.href : (C.siteUrl || location.href);
-  $('#shareBtn').onclick = function () { copy(shareUrl, '링크를 복사했습니다'); };
+  /* ----------  9. 푸터 ---------- */
 
   $('#footStamp').textContent = stampText;
   $('#footText').textContent = C.footerText || (g1 + ' ♥ ' + b1 + ' · ' + dateLabel);
