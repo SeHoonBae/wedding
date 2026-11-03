@@ -58,18 +58,11 @@
     <p class="greet" id="greet"></p>
     <span class="rule" aria-hidden="true"></span>
     <div class="couple" id="parents"></div>
-  </section>
-
-  <!-- 3. 연락하기 -->
-  <section class="sec tint reveal" aria-labelledby="t-call">
-    <p class="eyebrow">Contact</p>
-    <h2 class="h2" id="t-call">연락하기</h2>
-    <p class="lead">축하 인사를 전하실 분들께 번호를 열어 두었습니다.</p>
-    <ul class="contacts" id="contacts"></ul>
+    <div class="btnrow center parents-cta"><button class="btn line" type="button" id="parentsBtn" aria-haspopup="dialog" hidden>혼주에게 연락하기</button></div>
   </section>
 
   <!-- 4. 예식 일시 -->
-  <section class="sec reveal" aria-labelledby="t-when">
+  <section class="sec tint reveal" aria-labelledby="t-when">
     <p class="eyebrow">Wedding Day</p>
     <h2 class="h2" id="t-when">예식일</h2>
     <p class="when" id="whenLine"></p>
@@ -83,7 +76,7 @@
   </section>
 
   <!-- 5. 갤러리 -->
-  <section class="sec tint reveal" aria-labelledby="t-gal">
+  <section class="sec reveal" aria-labelledby="t-gal">
     <p class="eyebrow">Gallery</p>
     <h2 class="h2" id="t-gal">우리의 순간</h2>
     <div class="grid" id="grid"></div>
@@ -150,6 +143,17 @@
 <button class="bgm" type="button" id="bgmBtn" hidden aria-pressed="false">
   <span aria-hidden="true">♪</span><span class="sr" id="bgmLabel">배경음악 재생</span>
 </button>
+
+<!-- 혼주에게 연락하기 -->
+<div class="cm" id="cm" role="dialog" aria-modal="true" aria-labelledby="cmTitle" hidden>
+  <div class="cm-panel">
+    <div class="cm-head">
+      <h2 id="cmTitle">혼주에게 연락하기</h2>
+      <button class="cm-x" type="button" id="cmClose" aria-label="닫기"></button>
+    </div>
+    <div class="cm-body" id="cmBody"></div>
+  </div>
+</div>
 
 <!-- 갤러리 라이트박스 -->
 <div class="lb" id="lb" role="dialog" aria-modal="true" aria-label="사진 크게 보기" hidden>

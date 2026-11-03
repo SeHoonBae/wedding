@@ -138,28 +138,63 @@
 
   /* ---------- 2. 인사말 ---------- */
   $('#greet').textContent = C.greeting;
+  var ICON = {
+    tel: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6.6 10.8a15.1 15.1 0 0 0 6.6 6.6l2.2-2.2a1 1 0 0 1 1-.25 11.4 11.4 0 0 0 3.6.57 1 1 0 0 1 1 1V20a1 1 0 0 1-1 1A17 17 0 0 1 3 4a1 1 0 0 1 1-1h3.5a1 1 0 0 1 1 1c0 1.25.2 2.45.57 3.57a1 1 0 0 1-.25 1z"/></svg>',
+    sms: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 4h16a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H8l-4 3.5V6a2 2 0 0 1 2-2z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="M8 9.5h8M8 13h5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>'
+  };
+  var telNum = function (t) { return String(t || '').replace(/[^0-9+]/g, ''); };
+
   function parentLine(label, p) {
-    return '<div><small class="role">' + label + '</small><strong>' + esc(p.name) + '</strong>' +
+    var tel = telNum(p.tel);
+    return '<div><small class="role">' + label + '</small>' +
+      '<strong>' + esc(p.name) +
+      (tel ? '<a class="tel-ic" href="tel:' + esc(tel) + '" aria-label="' + esc(label + ' ' + p.name) + '에게 전화">' + ICON.tel + '</a>' : '') +
+      '</strong>' +
       '<span>' + esc(p.father.name) + ' · ' + esc(p.mother.name) + '의 ' + esc(p.rank) + '</span></div>';
   }
   $('#parents').innerHTML = parentLine('신랑', g) + parentLine('신부', b);
 
-  /* ---------- 3. 연락하기 ---------- */
-  var people = [
-    { role: '신랑', p: g }, { role: '신부', p: b },
-    { role: '신랑 아버지', p: g.father }, { role: '신랑 어머니', p: g.mother },
-    { role: '신부 아버지', p: b.father }, { role: '신부 어머니', p: b.mother }
-  ].filter(function (x) { return x.p && x.p.tel; });
-
-  if (!people.length) {
-    $('#contacts').closest('.sec').hidden = true;
-  } else {
-    $('#contacts').innerHTML = people.map(function (x) {
-      var tel = String(x.p.tel).replace(/[^0-9+]/g, '');
-      return '<li><span class="who"><small>' + esc(x.role) + '</small><b>' + esc(x.p.name) + '</b></span>' +
-        '<a class="icon" href="tel:' + esc(tel) + '" aria-label="' + esc(x.role + ' ' + x.p.name) + '에게 전화">전화</a>' +
-        '<a class="icon" href="sms:' + esc(tel) + '" aria-label="' + esc(x.role + ' ' + x.p.name) + '에게 문자">문자</a></li>';
-    }).join('');
+  /* ---------- 3. 혼주에게 연락하기 (모달) ---------- */
+  function sideBlock(cls, title, side) {
+    var rows = [{ role: '아버지', p: side.father }, { role: '어머니', p: side.mother }]
+      .filter(function (x) { return x.p && telNum(x.p.tel); });
+    if (!rows.length) { return ''; }
+    return '<div class="cm-side ' + cls + '"><h3>' + title + '</h3>' + rows.map(function (x) {
+      var tel = telNum(x.p.tel), who = title.replace('측', '') + ' ' + x.role + ' ' + x.p.name;
+      return '<div class="cm-person"><p class="cm-name"><small>' + x.role + '</small>' + esc(x.p.name) + '</p>' +
+        '<div class="cm-btns">' +
+        '<a href="tel:' + esc(tel) + '" aria-label="' + esc(who) + '에게 전화">' + ICON.tel + '</a>' +
+        '<a href="sms:' + esc(tel) + '" aria-label="' + esc(who) + '에게 문자">' + ICON.sms + '</a>' +
+        '</div></div>';
+    }).join('') + '</div>';
+  }
+  var cmHtml = sideBlock('groom', '신랑측', g) + sideBlock('bride', '신부측', b);
+  var cm = $('#cm'), cmLast = null, cmHist = false;
+  function cmOpen() {
+    cmLast = document.activeElement;
+    cm.hidden = false;
+    document.body.style.overflow = 'hidden';
+    requestAnimationFrame(function () { cm.classList.add('on'); });
+    $('#cmClose').focus();
+    try { history.pushState({ cm: 1 }, ''); cmHist = true; } catch (e) { cmHist = false; }
+  }
+  function cmClose(fromPop) {
+    if (cm.hidden) { return; }
+    cm.classList.remove('on');
+    cm.hidden = true;
+    document.body.style.overflow = '';
+    if (cmLast && cmLast.focus) { cmLast.focus(); }
+    if (cmHist && !fromPop) { cmHist = false; history.back(); }
+    cmHist = false;
+  }
+  if (cmHtml) {
+    $('#cmBody').innerHTML = cmHtml;
+    $('#parentsBtn').hidden = false;
+    $('#parentsBtn').onclick = cmOpen;
+    $('#cmClose').onclick = function () { cmClose(false); };
+    cm.addEventListener('click', function (e) { if (e.target === cm) { cmClose(false); } });
+    document.addEventListener('keydown', function (e) { if (e.key === 'Escape') { cmClose(false); } });
+    window.addEventListener('popstate', function () { cmClose(true); });
   }
 
   /* ---------- 4. 예식 일시 ---------- */
@@ -557,7 +592,7 @@
 
   /* ---------- 스크롤 등장 애니메이션 ----------
      섹션 안의 요소(목록은 항목 하나하나)를 화면에 들어올 때 차례로 띄웁니다. */
-  var LIST = '.contacts, .grid, .couple, .transit, .navbtns, #accounts, .btnrow';
+  var LIST = '.grid, .couple, .transit, .navbtns, #accounts, .btnrow';
   var items = [];
   [].slice.call(document.querySelectorAll('.reveal')).forEach(function (sec) {
     [].slice.call(sec.children).forEach(function (el) {

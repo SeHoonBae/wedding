@@ -98,14 +98,38 @@ a{color:var(--accent)}
 .couple strong{font-family:var(--f-name);font-weight:700;font-size:20px;letter-spacing:.06em}
 .couple span{font-size:14px;color:var(--muted)}
 
-/* ---------- 3. 연락하기 ---------- */
-.contacts{list-style:none;margin:0;padding:0;display:grid;gap:10px;text-align:left}
-.contacts li{display:flex;align-items:center;gap:8px;padding:12px 16px;border:1px solid var(--line);border-radius:10px;background:var(--bg)}
-.contacts .who{flex:1;min-width:0}
-.contacts .who small{display:block;color:var(--muted);font-size:13px;line-height:1.5}
-.contacts .who b{font-family:var(--f-name);font-size:17px;font-weight:700}
-.icon{flex:none;min-width:56px;min-height:44px;padding:0 12px;display:inline-flex;align-items:center;justify-content:center;
-  border:1px solid var(--line);border-radius:8px;background:var(--alt);color:var(--ink);text-decoration:none;font-size:15px;cursor:pointer}
+/* ---------- 3. 혼주에게 연락하기 ---------- */
+.couple strong{display:inline-flex;align-items:center;justify-content:center}
+.tel-ic{display:inline-flex;align-items:center;justify-content:center;width:36px;height:44px;margin:-10px -10px -10px 0;color:var(--accent)}
+.tel-ic svg{width:16px;height:16px;fill:currentColor}
+.parents-cta{margin-top:32px}
+.btn.line{padding:0 40px;border-radius:4px;background:var(--bg);font-weight:400;box-shadow:0 1px 4px rgba(78,64,57,.08)}
+
+.cm{position:fixed;inset:0;z-index:75;display:flex;align-items:flex-end;justify-content:center;background:rgba(30,22,18,0);transition:background .3s}
+.cm.on{background:rgba(30,22,18,.45)}
+.cm-panel{width:100%;max-width:480px;max-height:88svh;overflow-y:auto;overscroll-behavior:contain;background:var(--bg);
+  border-radius:16px 16px 0 0;padding-bottom:calc(36px + env(safe-area-inset-bottom,0px));
+  transform:translateY(24px);opacity:0;transition:transform .35s cubic-bezier(.22,.61,.36,1),opacity .35s}
+.cm.on .cm-panel{transform:none;opacity:1}
+.cm-head{position:sticky;top:0;z-index:1;background:var(--bg);text-align:center;padding:16px 56px;box-shadow:0 1px 3px rgba(0,0,0,.08)}
+.cm-head h2{margin:0;font-size:17px;font-weight:400}
+.cm-x{position:absolute;top:50%;right:8px;transform:translateY(-50%);width:44px;height:44px;border:0;background:none;cursor:pointer;color:var(--muted)}
+.cm-x::before,.cm-x::after{content:"";position:absolute;top:21px;left:13px;width:18px;height:1.5px;background:currentColor;transform:rotate(45deg)}
+.cm-x::after{transform:rotate(-45deg)}
+.cm-body{display:grid;grid-template-columns:repeat(auto-fit,minmax(0,1fr));padding:36px 16px 0;text-align:center;
+  opacity:0;transform:translateY(10px);transition:opacity .4s .25s,transform .4s .25s}
+.cm.on .cm-body{opacity:1;transform:none}
+.cm-side{--side:#6F86A3}
+.cm-side.bride{--side:#C0756A}
+.cm-side + .cm-side{border-left:1px solid var(--line)}
+.cm-side h3{margin:0 0 28px;font-size:16px;font-weight:700;color:var(--side)}
+.cm-person + .cm-person{margin-top:36px}
+.cm-name{margin:0 0 10px;font-family:var(--f-name);font-size:18px;font-weight:700}
+.cm-name small{margin-right:6px;font-family:var(--f-base);font-size:14px;font-weight:400;color:var(--muted)}
+.cm-btns{display:flex;justify-content:center;gap:18px}
+.cm-btns a{display:inline-flex;align-items:center;justify-content:center;width:44px;height:44px;border-radius:50%;
+  background:rgba(78,64,57,.06);background:color-mix(in srgb,var(--side) 12%,#fff);color:var(--side)}
+.cm-btns svg{width:20px;height:20px;fill:currentColor}
 
 /* ---------- 4. 예식일 ---------- */
 .when{margin:0 0 28px;font-size:17px;line-height:1.9}
@@ -255,4 +279,5 @@ a{color:var(--accent)}
   .lb-bar span,.more::after,.lb-slide .lb-hi{transition:none}
   .cue{animation:none;opacity:.6}
   .acc summary::after{transition:none}
+  .cm,.cm-panel,.cm-body{transition:none}
 }
