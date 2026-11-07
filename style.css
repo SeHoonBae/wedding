@@ -1,11 +1,11 @@
 /* 모바일 청첩장 — 디자인: pagesisters "the-wedding" 구성(풀사진 커버 + 손글씨 제목, 흰색·웜베이지 교차 섹션, 모카 포인트)
-   글꼴: pagesisters "tonight" 구성
-     - 본문·제목  Gowun Batang      (tonight 기본 테마 글꼴)
-     - 이름·맺음말 Nanum Myeongjo    (tonight 신랑·신부 이름, 마무리 문구)
-     - 손글씨 제목 Allura            (tonight "Tonight" 제목)
-     - 영문 장식  Fraunces          (tonight 영문 문구, "The Wedding Issue")
-     - 정보 글자  Pretendard        (달력·주소·교통·계좌번호)
-   한글 웹폰트는 Google Fonts / jsDelivr 가 글자 단위로 잘라 보내 필요한 조각만 받습니다. */
+   글꼴: pagesisters "paper-hearts" 구성
+     - 본문·제목·이름 Pretendard            (paper-hearts 기본 글꼴, 이름은 굵게)
+     - 영문 손글씨   Delicious Handrawn    (paper-hearts "THE WEDDING DAY", 영문 이름)
+     - 한글 손글씨   김정철 손글씨체 Bold   (paper-hearts 예식일·예식장, 맺음말)
+     - 커버(사진 위 글씨)만 이전 구성 유지: 제목 Allura, 영문 이름·날짜·장소 Fraunces(+한글 Gowun Batang)
+   한글 웹폰트는 jsDelivr 가 글자 단위로 잘라 보내 필요한 조각만 받습니다.
+   김정철 손글씨체: ㈜정림건축, 자유 재배포 라이선스(폰트 파일 유상판매만 금지). */
 
 :root{
   --bg:#FFFFFF;      /* 기본 배경 */
@@ -14,11 +14,14 @@
   --muted:#85766D;   /* 보조 글자 */
   --accent:#A27E6E;  /* 모카 포인트 */
   --line:#EADFD8;    /* 구분선·테두리 */
-  --f-base:"Gowun Batang","Nanum Myeongjo","AppleMyungjo","Batang",serif;
-  --f-name:"Nanum Myeongjo","Gowun Batang","AppleMyungjo",serif;
-  --f-script:"Allura","Snell Roundhand","Segoe Script",cursive;
-  --f-latin:"Fraunces","Gowun Batang",Georgia,serif;
   --f-ui:"Pretendard Variable","Pretendard",-apple-system,"Apple SD Gothic Neo","Malgun Gothic",sans-serif;
+  --f-base:var(--f-ui);
+  --f-name:var(--f-ui);
+  --f-script:"Delicious Handrawn","Segoe Print",cursive;
+  --f-latin:"Delicious Handrawn",var(--f-ui);
+  --f-hand:"Kimjungchul Script",var(--f-ui);
+  --f-cover-script:"Allura","Snell Roundhand","Segoe Script",cursive;
+  --f-cover-latin:"Fraunces","Gowun Batang",Georgia,serif;
   color-scheme:light;
 }
 
@@ -35,7 +38,7 @@ a{color:var(--accent)}
 .page{max-width:480px;margin:0 auto;background:var(--bg);overflow:hidden;box-shadow:0 0 0 1px var(--line)}
 .sec{padding:64px max(24px,env(safe-area-inset-right,0px)) 64px max(24px,env(safe-area-inset-left,0px));text-align:center}
 .sec.tint{background:var(--alt)}
-.eyebrow{font-family:var(--f-latin);font-style:italic;font-size:14px;letter-spacing:.06em;color:var(--accent);margin:0}
+.eyebrow{font-family:var(--f-latin);font-size:18px;line-height:1.3;letter-spacing:.04em;color:var(--accent);margin:0}
 .h2{font-family:var(--f-base);font-weight:700;font-size:20px;line-height:1.4;margin:4px 0 24px;letter-spacing:.02em}
 .lead{color:var(--muted);margin:0 0 24px}
 .lead.left{text-align:left}
@@ -72,16 +75,16 @@ a{color:var(--accent)}
 .cover > .cover-en{top:calc(8% + env(safe-area-inset-top,0px))}
 .cover > .cover-title{top:0;bottom:0;display:flex;align-items:center;justify-content:center;pointer-events:none}
 .cover > .cover-foot{bottom:calc(10% + env(safe-area-inset-bottom,0px))}
-.cover-en{margin:0;font-family:var(--f-latin);font-size:15px;font-variant:small-caps;letter-spacing:.32em;
+.cover-en{margin:0;font-family:var(--f-cover-latin);font-size:15px;font-variant:small-caps;letter-spacing:.32em;
   text-shadow:0 1px 8px rgba(0,0,0,.35)}
 .cover-title{margin:0;font-weight:400}
-.cover-title .script{display:flex;flex-direction:column;align-items:center;font-family:var(--f-script);
+.cover-title .script{display:flex;flex-direction:column;align-items:center;font-family:var(--f-cover-script);
   font-size:clamp(76px,24vw,104px);line-height:.82;text-shadow:0 2px 14px rgba(0,0,0,.3)}
 .cover-title .script span:first-child{transform:translateX(-18%)}
 .cover-title .script span:last-child{transform:translateX(8%)}
 .cover-foot{display:grid;gap:6px}
-.cover-date{margin:0;font-family:var(--f-latin);font-size:18px;letter-spacing:.24em;text-shadow:0 1px 8px rgba(0,0,0,.35)}
-.subline{margin:0;font-family:var(--f-latin);font-size:13px;letter-spacing:.12em;opacity:.88}
+.cover-date{margin:0;font-family:var(--f-cover-latin);font-size:18px;letter-spacing:.24em;text-shadow:0 1px 8px rgba(0,0,0,.35)}
+.subline{margin:0;font-family:var(--f-cover-latin);font-size:13px;letter-spacing:.12em;opacity:.88}
 .cue{position:absolute;left:50%;bottom:calc(18px + env(safe-area-inset-bottom,0px));
   width:1px;height:26px;background:linear-gradient(to bottom,transparent,rgba(255,255,255,.8));animation:cue 2.2s ease-in-out infinite}
 @keyframes cue{0%,100%{opacity:.25;transform:translateY(-4px)}50%{opacity:1;transform:translateY(2px)}}
@@ -145,7 +148,11 @@ a{color:var(--accent)}
   font-size:10px;font-weight:600;color:var(--accent)}
 .dday{margin:0;color:var(--muted)}
 .dday b{color:var(--accent)}
-.dnum{margin:2px 0 22px;font-family:var(--f-latin);font-weight:600;font-size:28px;letter-spacing:.06em;color:var(--accent)}
+.cd{display:flex;justify-content:center;align-items:flex-start;gap:6px;margin:10px 0 24px;font-family:var(--f-ui);color:var(--accent)}
+.cd span{display:flex;flex-direction:column;align-items:center;min-width:58px}
+.cd b{font-size:28px;font-weight:600;line-height:1.2;font-variant-numeric:tabular-nums}
+.cd small{margin-top:4px;font-size:11px;letter-spacing:.08em;color:var(--muted)}
+.cd i{font-style:normal;font-size:24px;line-height:1.3;color:var(--accent);opacity:.45}
 
 .btnrow{display:flex;flex-wrap:wrap;gap:10px}
 .btnrow.center{justify-content:center}
@@ -194,7 +201,7 @@ a{color:var(--accent)}
 .lb-foot{position:absolute;left:0;right:0;bottom:0;padding:0 24px calc(18px + env(safe-area-inset-bottom,0px));z-index:2;pointer-events:none;text-align:center}
 .lb-bar{height:3px;border-radius:3px;background:rgba(255,255,255,.18);overflow:hidden}
 .lb-bar span{display:block;height:100%;width:0;background:var(--accent);transition:width .25s ease}
-.lb-count{display:block;margin-top:12px;font-family:var(--f-latin);font-size:14px;letter-spacing:.1em;color:rgba(255,255,255,.8)}
+.lb-count{display:block;margin-top:12px;font-family:var(--f-latin);font-size:17px;letter-spacing:.1em;color:rgba(255,255,255,.8)}
 @keyframes fadein{from{opacity:0}to{opacity:1}}
 
 /* ---------- 6. 장소 · 오시는 길 ---------- */
@@ -230,7 +237,7 @@ a{color:var(--accent)}
 .steps{list-style:none;margin:0;padding:0;counter-reset:s;text-align:left}
 .steps li{display:grid;grid-template-columns:30px 1fr;gap:14px;padding-block:16px;border-bottom:1px solid var(--line);counter-increment:s}
 .steps li::before{content:counter(s);width:30px;height:30px;border-radius:50%;background:var(--accent);color:#fff;
-  display:flex;align-items:center;justify-content:center;font-family:var(--f-latin);font-weight:600;font-size:14px}
+  display:flex;align-items:center;justify-content:center;font-family:var(--f-latin);font-weight:400;font-size:17px}
 .steps b{display:block;font-size:17px;line-height:1.5;font-weight:700}
 .steps span{display:block;font-family:var(--f-ui);font-size:15px;line-height:1.65;color:var(--muted);margin-top:2px}
 .chip{display:inline-block;padding:0 7px;margin-right:6px;border:1px solid var(--accent);border-radius:4px;color:var(--accent);
@@ -254,9 +261,9 @@ a{color:var(--accent)}
 .acc .cp{flex:none;min-height:40px;padding:0 14px;border:1px solid var(--line);border-radius:8px;background:var(--alt);color:var(--ink);font-size:14px;font-weight:700;cursor:pointer}
 
 /* ---------- 8·9. 맺음말 · 푸터 ---------- */
-.closing{margin:0 0 28px;font-family:var(--f-name);font-size:17px;line-height:2;white-space:pre-line}
+.closing{margin:0 0 28px;font-family:var(--f-hand);font-weight:700;font-size:19px;line-height:2;white-space:pre-line}
 .foot{padding:40px 24px calc(40px + env(safe-area-inset-bottom,0px));background:#2B1F1A;text-align:center;color:rgba(255,255,255,.55);font-size:13px}
-.foot-date{margin:0 0 6px;font-family:var(--f-latin);font-size:13px;letter-spacing:.3em;color:rgba(255,255,255,.75)}
+.foot-date{margin:0 0 6px;font-family:var(--f-latin);font-size:16px;letter-spacing:.3em;color:rgba(255,255,255,.75)}
 .foot p{margin:0}
 
 /* 배경음악 버튼 */

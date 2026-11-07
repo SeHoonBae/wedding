@@ -206,7 +206,22 @@
   $('#dday').innerHTML = diff > 0 ? '앞으로 <b>' + diff + '일</b> 남았어요'
     : diff === 0 ? '<b>오늘</b>이 결혼식입니다'
     : '결혼한 지 <b>' + (-diff) + '</b>일 되었습니다';
-  $('#stubDay').textContent = diff > 0 ? 'D-' + diff : diff === 0 ? 'D-DAY' : 'D+' + (-diff);
+
+  /* 실시간 카운트다운 (DAYS : HOURS : MINUTES : SECONDS) — 예식 시각은 한국 시간(UTC+9) 기준 */
+  var eventAt = Date.UTC(Y, M - 1, D, H - 9, MIN);
+  var cdEl = {};
+  ['d', 'h', 'm', 's'].forEach(function (u) { cdEl[u] = $('#countdown [data-u="' + u + '"]'); });
+  var cdTimer;
+  function tick() {
+    var left = Math.max(0, Math.floor((eventAt - Date.now()) / 1000));
+    cdEl.d.textContent = Math.floor(left / 86400);
+    cdEl.h.textContent = pad(Math.floor(left % 86400 / 3600));
+    cdEl.m.textContent = pad(Math.floor(left % 3600 / 60));
+    cdEl.s.textContent = pad(left % 60);
+    if (!left && cdTimer) { clearInterval(cdTimer); }
+  }
+  tick();
+  if (eventAt > Date.now()) { cdTimer = setInterval(tick, 1000); }
 
   var first = new Date(Y, M - 1, 1).getDay();
   var days = new Date(Y, M, 0).getDate();

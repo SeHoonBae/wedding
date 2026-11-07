@@ -31,7 +31,8 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Allura&family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,900;1,9..144,400&family=Gowun+Batang:wght@400;700&family=Nanum+Myeongjo:wght@400;700&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Allura&family=Delicious+Handrawn&family=Fraunces:opsz,wght@9..144,400&family=Gowun+Batang&display=swap">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/fonts-archive/KimjungchulScript/subsets/KimjungchulScript-dynamic-subset.css">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
 <link rel="stylesheet" href="style.css">
 </head>
@@ -69,7 +70,12 @@
     <div class="cal" id="cal" role="table" aria-label="예식이 있는 달의 달력"></div>
     <span class="rule" aria-hidden="true"></span>
     <p class="dday" id="dday"></p>
-    <p class="dnum" id="stubDay"></p>
+    <div class="cd" id="countdown" role="timer" aria-label="예식까지 남은 시간">
+      <span><b data-u="d">0</b><small>DAYS</small></span><i aria-hidden="true">:</i>
+      <span><b data-u="h">00</b><small>HOURS</small></span><i aria-hidden="true">:</i>
+      <span><b data-u="m">00</b><small>MINUTES</small></span><i aria-hidden="true">:</i>
+      <span><b data-u="s">00</b><small>SECONDS</small></span>
+    </div>
     <div class="btnrow center">
       <a class="btn" id="gcal" target="_blank" rel="noopener">내 캘린더에 저장하기</a>
     </div>
