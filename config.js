@@ -108,7 +108,7 @@ window.CONFIG = {
     groom: [
       { who: '신랑', bank: '국민은행' },
       { who: '신랑 아버지', bank: '국민은행' },
-      { who: '신랑 어머니', bank: '농협은행' }
+      { who: '신랑 어머니', bank: '국민은행' }
     ],
     bride: [
       { who: '신부', bank: '신한은행' },
