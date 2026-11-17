@@ -18,18 +18,16 @@ window.CONFIG = {
     ogImage: 'assets/og.jpg'   // 1200×630, 300KB 이하 JPG
   },
 
-  /* --- 신랑 · 신부 ---------------------------------------------
-     tel 은 '연락하기' 버튼에 쓰입니다. 비우면 그 버튼은 숨습니다. */
-  groom: {                                     // TODO: 이름·성함·번호 전부
-    name: '배세훈', en: 'Sehoon', rank: '장남', tel: '010-0000-0000',
-    father: { name: '배정열', tel: '010-0000-0000' },
-    mother: { name: '손승순', tel: '010-0000-0000' }
-  },
-  bride: {                                     // TODO
-    name: '황초희', en: 'Chohee', rank: '장녀', tel: '010-0000-0000',
-    father: { name: '황기순', tel: '010-0000-0000' },
-    mother: { name: '박노영', tel: '010-0000-0000' }
-  },
+  /* --- 개인정보 (암호문) ----------------------------------------
+     신랑·신부·혼주의 이름과 전화번호, 계좌번호·예금주는 아래 한 줄에 암호문으로 들어 있습니다.
+     평문으로 적지 마세요. 공개 저장소와 크롤러에 그대로 노출됩니다.
+     바꾸는 법: tools/secure.html 을 브라우저로 열어 값을 고치고 [생성] → 나온 줄로 아래 줄을 통째로 바꿉니다.
+     (DEPLOY.md '개인정보 넣기' 참고) */
+  private: 'P1:vg9.9qtEAj49VwNcYJ0hqfm57wky1E7cVsmbF7JfPwajCdSuHJPwfvvOpYU0ScfVyDfkb5MxPR5tf3i7zh9/4kJuBKO1HAFKcxmErhqaEg8dc0lz++9nH/gzuWg+PFvbRc6XX7PFhoKqTDYEpC/dF/WVm4YOwuTNBdo/ivEojRoOnU0XsGsngpp4mh0c+xrqNkIgpeFvcjeEjBuNlMYlANcnjV4B+0qMEAFq/Pg+s6nLxoINrBkjoG2VdWqlt9D3vFc11hwFJ1b4l1A1yUDKj6UkVH3PLUtWo+2gu9SQpl1rUc3dZMNigwe7NuBEz70acJfyXyRqGk66zR7rs2cqI/g7vZt4kIdUngKjFDl2WzprYr4hGVPBLluKYoHu/INenVixKryIeapkDFn8f6CdoyMzQOyKtLYTJxLw2Do6rrDBO9VXwwICKpUQZazZtc96xtfrLn/SfOOWRRiPGiy1zanwzTY6FBFQAwcyfYFUvQ7AK4PNxGhQqeGUvQPxPXnOZcmIiujteNO6J54gETHZs03awJ2r8KAuZIAGWjh/kOI2G1Ys4fQIg5heFfWb5bC2KVKS7J6UjgCPBHjV13q856hmuBfFhnGZ135SKe+e90OKVVxPF7IVbaRCgp5tcOoVMkkuJFwLFyrwXUVR4ZmK2kcz9h+Z7U1GfX17gMEKl47x20a+b5sJndp2erGQoRl/arHbYSxB8KAz8cSN2YpnK4Igij44mQVUSrcctx8okPExVXF0k7RdobjAn+Of75rbm/l01s6oQ9ENqD7CY/1KFNboRmPH9Ll+',
+
+  /* --- 신랑 · 신부 (이름·전화번호는 위 private 에 있습니다) ------ */
+  groom: { en: 'Sehoon', rank: '장남' },
+  bride: { en: 'Chohee', rank: '장녀' },
 
   /* --- 커버 영문 문구 -----------------------------------------
      커버 가운데 손글씨 제목입니다. 위쪽 영문 이름은 groom.en / bride.en 을 씁니다. */
@@ -65,7 +63,7 @@ window.CONFIG = {
   cover: 'assets/cover.jpg',   // 1440×2160 (원본 main.jpg 와 같은 2:3 비율). 커버 높이는 사진 비율에 자동으로 맞춰집니다.
   galleryThumbs: true,  // assets/gallery/thumb/ 의 작은 사진을 격자에 씁니다. 사진 추가 방법은 DEPLOY.md '갤러리 사진' 참고.
   galleryInitial: 9,   // 처음에 보여 줄 사진 수. 이보다 많으면 '더 보기' 버튼이 생깁니다.
-  gallery: ['assets/gallery/D_M01759마트좌.webp', 'assets/gallery/D_M01767마트우.webp', 'assets/gallery/D_M01803마트중+.webp', 'assets/gallery/D_M01991.webp', 'assets/gallery/D_M02008스프레드.webp', 'assets/gallery/D_M02028우.webp', 'assets/gallery/D_M02065.webp', 'assets/gallery/D_M02137마트좌.webp', 'assets/gallery/D_M02157마트중.webp', 'assets/gallery/D_M02182마트우.webp', 'assets/gallery/D_M02206우.webp', 'assets/gallery/D_M02246마트-메인우-.webp', 'assets/gallery/D_M02274마트좌-상-.webp', 'assets/gallery/D_M02281마트좌-중++.webp', 'assets/gallery/D_M02289마트좌-하++.webp', 'assets/gallery/D_M02311.webp', 'assets/gallery/D_M02470.webp', 'assets/gallery/D_M02603스프레드++.webp', 'assets/gallery/D_M02679우.webp', 'assets/gallery/D_M02795마트중+.webp', 'assets/gallery/D_M02845마트우+.webp', 'assets/gallery/D_M02875마트좌+.webp', 'assets/gallery/D_M02912.webp', 'assets/gallery/D_M02925우.webp', 'assets/gallery/D_M03004스프레드.webp', 'assets/gallery/D_M03053마트좌.webp', 'assets/gallery/D_M03060마트중.webp', 'assets/gallery/D_M03102마트우.webp', 'assets/gallery/D_M03157마트-메인좌.webp', 'assets/gallery/D_M03188마트우1+.webp', 'assets/gallery/D_M03195마트우2.webp', 'assets/gallery/D_M03362.webp'],
+  gallery: ['assets/gallery/D_M01759마트좌.webp', 'assets/gallery/D_M01767마트우.webp', 'assets/gallery/D_M01803마트중+.webp', 'assets/gallery/D_M01991.webp', 'assets/gallery/D_M02008스프레드.webp', 'assets/gallery/D_M02028우.webp', 'assets/gallery/D_M02065.webp', 'assets/gallery/D_M02137마트좌.webp', 'assets/gallery/D_M02157마트중.webp', 'assets/gallery/D_M02182마트우.webp', 'assets/gallery/D_M02206우.webp', 'assets/gallery/D_M02246마트-메인우-.webp', 'assets/gallery/D_M02274마트좌-상-.webp', 'assets/gallery/D_M02281마트좌-중++.webp', 'assets/gallery/D_M02289마트좌-하++.webp', 'assets/gallery/D_M02311.webp', 'assets/gallery/D_M02470.webp', 'assets/gallery/D_M02603스프레드++.webp', 'assets/gallery/D_M02679우.webp', 'assets/gallery/D_M02795마트중+.webp', 'assets/gallery/D_M02845마트우+.webp', 'assets/gallery/D_M02875마트좌+.webp', 'assets/gallery/D_M02912.webp', 'assets/gallery/D_M02925우.webp', 'assets/gallery/D_M03004스프레드.webp', 'assets/gallery/D_M03053마트좌.webp', 'assets/gallery/D_M03102마트우.webp', 'assets/gallery/D_M03157마트-메인좌.webp', 'assets/gallery/D_M03195마트우2.webp'],
 
   /* --- 네이버 지도 ---------------------------------------------
      네이버 클라우드 플랫폼 > Maps > Dynamic Map 에서 받은 Client ID.
@@ -105,16 +103,17 @@ window.CONFIG = {
 
   /* --- 마음 전하실 곳 ------------------------------------------ */
   giftLead: '참석이 어려워 마음만 전하시는 분들을 위해 계좌를 적었습니다. 축하해 주시는 마음에 감사드립니다.',
-  accounts: {                                  // TODO: 은행·계좌번호 전부
+  /* 은행 이름과 표시 문구만 여기 적습니다. 계좌번호·예금주는 위 private 에 같은 순서로 들어 있습니다. */
+  accounts: {                                  // TODO: 은행 이름
     groom: [
-      { who: '신랑', bank: '○○은행', no: '000-0000-000000', holder: '배세훈' },
-      { who: '신랑 아버지', bank: '○○은행', no: '000-0000-000000', holder: '배정열' },
-      { who: '신랑 어머니', bank: '○○은행', no: '000-0000-000000', holder: '손승순' }
+      { who: '신랑', bank: '국민은행' },
+      { who: '신랑 아버지', bank: '국민은행' },
+      { who: '신랑 어머니', bank: '농협은행' }
     ],
     bride: [
-      { who: '신부', bank: '○○은행', no: '000-0000-000000', holder: '황초희' },
-      { who: '신부 아버지', bank: '○○은행', no: '000-0000-000000', holder: '황기순' },
-      { who: '신부 어머니', bank: '○○은행', no: '000-0000-000000', holder: '박노영' }
+      { who: '신부', bank: '신한은행' },
+      { who: '신부 아버지', bank: '신한은행' },
+      { who: '신부 어머니', bank: '지역농.축협' }
     ]
   },
 

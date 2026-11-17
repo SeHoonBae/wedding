@@ -5,6 +5,36 @@
   var C = window.CONFIG;
   if (!C) { return; }
 
+  /* ---------- 개인정보: config.js 의 private(암호문)를 풀어 합칩니다 ---------- */
+  (function mergePrivate() {
+    var P = {};
+    if (C.private) {
+      try { P = window.SECURE.decode(C.private); } catch (e) {
+        if (window.console) { console.warn('[청첩장] private 값을 풀지 못했습니다. tools/secure.html 로 다시 만드세요.'); }
+      }
+    }
+    function person(base, src) {
+      base = base || {}; src = src || {};
+      ['name', 'tel'].forEach(function (k) { if (src[k] != null) { base[k] = src[k]; } });
+      return base;
+    }
+    ['groom', 'bride'].forEach(function (side) {
+      var s = person(C[side], P[side]);
+      s.father = person(s.father, (P[side] || {}).father);
+      s.mother = person(s.mother, (P[side] || {}).mother);
+      s.name = s.name || ''; s.father.name = s.father.name || ''; s.mother.name = s.mother.name || '';
+      C[side] = s;
+    });
+    var A = C.accounts || {}, PA = P.accounts || {};
+    ['groom', 'bride'].forEach(function (side) {
+      (A[side] || []).forEach(function (r, i) {
+        var src = (PA[side] || [])[i] || {};
+        if (src.no != null) { r.no = src.no; }
+        if (src.holder != null) { r.holder = src.holder; }
+      });
+    });
+  })();
+
   var $ = function (s, r) { return (r || document).querySelector(s); };
   var esc = function (s) {
     return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) {
@@ -67,9 +97,22 @@
       done(ok);
     }
   }
+  /* 전화번호·계좌번호는 DOM 속성에 넣지 않고 여기(메모리)에만 둡니다.
+     화면 요소에는 순번(data-p)만 붙이고, 누르는 순간 꺼내 씁니다. */
+  var VAULT = [];
+  var keep = function (v) { VAULT.push(String(v)); return VAULT.length - 1; };
+
   document.addEventListener('click', function (e) {
     var c = e.target.closest('[data-copy]');
-    if (c) { copy(c.getAttribute('data-copy'), c.getAttribute('data-msg') || '복사했습니다'); }
+    if (c) { copy(c.getAttribute('data-copy'), c.getAttribute('data-msg') || '복사했습니다'); return; }
+    var a = e.target.closest('[data-p]');
+    if (!a) { return; }
+    var v = VAULT[+a.getAttribute('data-p')];
+    if (v == null) { return; }
+    e.preventDefault();
+    var act = a.getAttribute('data-act');
+    if (act === 'copy') { copy(v, a.getAttribute('data-msg') || '복사했습니다'); }
+    else { location.href = act + ':' + v; }   // tel: / sms:
   });
 
   /* 앱 스킴을 열고, 1.5초 안에 앱이 안 열리면 웹 주소로 넘깁니다.
@@ -148,7 +191,7 @@
     var tel = telNum(p.tel);
     return '<div><small class="role">' + label + '</small>' +
       '<strong>' + esc(p.name) +
-      (tel ? '<a class="tel-ic" href="tel:' + esc(tel) + '" aria-label="' + esc(label + ' ' + p.name) + '에게 전화">' + ICON.tel + '</a>' : '') +
+      (tel ? '<a class="tel-ic" href="#" role="button" data-act="tel" data-p="' + keep(tel) + '" aria-label="' + esc(label + ' ' + p.name) + '에게 전화">' + ICON.tel + '</a>' : '') +
       '</strong>' +
       '<span>' + esc(p.father.name) + ' · ' + esc(p.mother.name) + '의 ' + esc(p.rank) + '</span></div>';
   }
@@ -160,11 +203,11 @@
       .filter(function (x) { return x.p && telNum(x.p.tel); });
     if (!rows.length) { return ''; }
     return '<div class="cm-side ' + cls + '"><h3>' + title + '</h3>' + rows.map(function (x) {
-      var tel = telNum(x.p.tel), who = title.replace('측', '') + ' ' + x.role + ' ' + x.p.name;
+      var tel = keep(telNum(x.p.tel)), who = title.replace('측', '') + ' ' + x.role + ' ' + x.p.name;
       return '<div class="cm-person"><p class="cm-name"><small>' + x.role + '</small>' + esc(x.p.name) + '</p>' +
         '<div class="cm-btns">' +
-        '<a href="tel:' + esc(tel) + '" aria-label="' + esc(who) + '에게 전화">' + ICON.tel + '</a>' +
-        '<a href="sms:' + esc(tel) + '" aria-label="' + esc(who) + '에게 문자">' + ICON.sms + '</a>' +
+        '<a href="#" role="button" data-act="tel" data-p="' + tel + '" aria-label="' + esc(who) + '에게 전화">' + ICON.tel + '</a>' +
+        '<a href="#" role="button" data-act="sms" data-p="' + tel + '" aria-label="' + esc(who) + '에게 문자">' + ICON.sms + '</a>' +
         '</div></div>';
     }).join('') + '</div>';
   }
@@ -535,15 +578,45 @@
     if (!rows || !rows.length) { return ''; }
     return '<details class="acc"' + (open ? ' open' : '') + '><summary>' + esc(title) + '</summary><ul>' +
       rows.map(function (r) {
-        var full = r.bank + ' ' + r.no;
+        if (!r.no) { return ''; }
+        var k = keep(r.bank + ' ' + r.no);
         return '<li><div class="info"><small>' + esc(r.who) + ' · ' + esc(r.holder) + '</small>' +
-          '<span>' + esc(full) + '</span></div>' +
-          '<button class="cp" type="button" data-copy="' + esc(full) + '" data-msg="' +
+          '<span data-acc="' + k + '">' + esc(r.bank) + ' ••••</span></div>' +
+          '<button class="cp" type="button" data-act="copy" data-p="' + k + '" data-msg="' +
           esc(r.holder) + '님 계좌를 복사했습니다">복사</button></li>';
       }).join('') + '</ul></details>';
   }
   var acc = C.accounts || {};
   $('#accounts').innerHTML = accBlock('신랑측 계좌번호', acc.groom, true) + accBlock('신부측 계좌번호', acc.bride, true);
+
+  /* 계좌번호는 방문자가 화면을 움직인 뒤(스크롤·터치·키) 계좌 영역이 보일 때 채웁니다.
+     아무 조작 없이 DOM만 긁어 가는 수집기에는 •••• 만 남습니다. */
+  (function revealAccounts() {
+    var box = $('#accounts'), moved = false, shown = false, near = false;
+    function fill() {
+      if (shown || !moved || !near) { return; }
+      shown = true;
+      [].forEach.call(box.querySelectorAll('[data-acc]'), function (el) {
+        el.textContent = VAULT[+el.getAttribute('data-acc')];
+        el.removeAttribute('data-acc');
+      });
+    }
+    function onMove() {
+      moved = true;
+      ['scroll', 'touchstart', 'pointerdown', 'keydown', 'wheel'].forEach(function (t) {
+        window.removeEventListener(t, onMove, true);
+      });
+      fill();
+    }
+    ['scroll', 'touchstart', 'pointerdown', 'keydown', 'wheel'].forEach(function (t) {
+      window.addEventListener(t, onMove, { capture: true, passive: true });
+    });
+    if ('IntersectionObserver' in window) {
+      new IntersectionObserver(function (es, ob) {
+        if (es[0].isIntersecting) { near = true; ob.disconnect(); fill(); }
+      }, { rootMargin: '300px 0px' }).observe(box);
+    } else { near = true; }
+  })();
 
   /* ---------- 선택 기능: RSVP · 방명록 · 배경음악 ---------- */
   var F = C.features || {};
